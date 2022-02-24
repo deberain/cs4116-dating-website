@@ -1,0 +1,65 @@
+body, html {
+    background: #202731;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    bottom: 0;
+    margin: 0%;
+}
+
+.welcome-wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  transform: rotate(180deg);
+}
+
+.welcome-wave svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 150px;
+}
+
+.welcome-wave .shape-fill {
+  fill: #202731;
+}
+
+.welcome {
+  padding: 100px 20vw 300px;
+  position: relative;
+  background: rgb(252,8,255);
+  background: linear-gradient(90deg, rgba(252,8,255,1) 0%, rgba(128,0,255,1) 100%); 
+  color: #ffffff;
+  font-family: 'Prompt', sans-serif;
+}
+
+#login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: auto; 
+}
+
+.login-form {
+  min-width: 400px;
+  max-width: 600px;
+  margin: 150px 25vw;
+  padding: 20px;
+  border: 1px solid #2d2d2d;
+  background: #f0f0f0;
+  font-family: 'Prompt', sans-serif;
+}
+
+.btn-purple {
+  background-color: rgb(252,8,255);
+  color: #ffffff;
+}
+
+.btn-secondary {
+  background-color: #202731;
+}
