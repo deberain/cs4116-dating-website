@@ -29,9 +29,44 @@ body, html {
   }
 
   .pending-connections {
-    padding: 100px 10vw 200px;
+    padding: 50px 10vw 200px;
     position: relative;
     background: rgb(252,8,255);
     background: linear-gradient(90deg, rgba(252,8,255,1) 0%, rgba(128,0,255,1) 100%); 
     font-family: 'Prompt', sans-serif;
+  }
+
+  .pending-connections h2 {
+    color: white;
+  }
+
+  .profile-card img {
+    height: 200px;
+  }
+
+  .profile-card-btns {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+  }
+
+  .age-location {
+    margin-top: 0;
+    font-size: 0.8em;
+  }
+
+  .card-title {
+    margin-bottom: 0px;
+    margin-top: -10px;
+  }
+
+  .suggested-users {
+    padding: 50px 10vw 200px;
+    position: relative;
+    background: #202731;
+    font-family: 'Prompt', sans-serif;
+  }
+
+  .suggested-users h2 {
+    color: white;
   }
