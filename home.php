@@ -47,10 +47,10 @@ if (isset($_POST['logout'])) {
             <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item active">
-            <a class="nav-link" href="#">Browse </a>
+            <a class="nav-link" href="browse.php">Browse </a>
           </li>
           <li class="nav-item active">
-            <a class="nav-link" href="#">Chats </a>
+            <a class="nav-link" href="chats.php">Chats </a>
           </li>
         </ul>
         <ul class="navbar-nav ml-auto">
