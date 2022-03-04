@@ -65,22 +65,302 @@ if (isset($_POST['logout'])) {
         </nav>
     </header>
 
+    <div class="grid-container">
+        <div class="filterOptionsContainer">
+            <h5 class="text-white">Age and Distance options</h5>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="filterByAge" onclick="showAgeOptions()">
+                <label class="form-check-label" for="filterByAge">
+                    Filter By Age
+                </label>
+            </div>
+            <div id="ageOptions">
+                <br />
+                <div class="mb-3">
+                    <label for="minAgeFilter" class="form-label">Minimum Age</label>
+                    <input type="range" class="form-control" id="minAgeFilter" value="18" min="18" max="100">
+                    <span class="rangeval" id="minAgeVal">18</span>
+                </div>
+                <div class="mb-3">
+                    <label for="maxAgeFilter" class="form-label">Maximum Age</label>
+                    <input type="range" class="form-control" id="maxAgeFilter" value="100" min="18" max="100">
+                    <span class="rangeval" id="maxAgeVal">100</span>
+                </div>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="filterByDistance" onclick="showDistanceOptions()">
+                <label class="form-check-label" for="filterByDistance">
+                    Filter By Distance
+                </label>
+            </div>
+            <div class="mb-3" id="distanceOptions">
+                <br />
+                <label for="maxDistance" class="form-label">Maximum Distance</label>
+                <input type="range" class="form-control" id="maxDistance" value="1000" min="0" step="5" max="1000">
+                <span class="rangeval" id="maxDistanceVal">1000 km</span>
+            </div>
+
+            <br />
+
+            <h5 class="text-white">Interests Options</h5>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="SportCheckbox" onclick="updateFilter()">
+                <label class="form-check-label" for="SportCheckbox">Sport</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="MusicCheckbox" onclick="updateFilter()">
+                <label class="form-check-label" for="MusicCheckbox">Music</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="TVCheckbox" onclick="updateFilter()">
+                <label class="form-check-label" for="TVCheckbox">TV</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="MoviesCheckbox" onclick="updateFilter()">
+                <label class="form-check-label" for="MoviesCheckbox">Movies</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="DancingCheckbox" onclick="updateFilter()">
+                <label class="form-check-label" for="DancingCheckbox">Dancing</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="VideoGamesCheckbox" onclick="updateFilter()">
+                <label class="form-check-label" for="VideogamesCheckbox">Video Games</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="CookingCheckbox" onclick="updateFilter()">
+                <label class="form-check-label" for="CookingCheckbox">Cooking</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="PhotographyCheckbox" onclick="updateFilter()">
+                <label class="form-check-label" for="PhotographyCheckbox">Photography</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="AnimalsCheckbox" onclick="updateFilter()">
+                <label class="form-check-label" for="AnimalsCheckbox">Animals</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="AnimeCheckbox" onclick="updateFilter()">
+                <label class="form-check-label" for="AnimeCheckbox">Anime</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="FashionCheckbox" onclick="updateFilter()">
+                <label class="form-check-label" for="FashionCheckbox">Fashion</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="ScienceCheckbox" onclick="updateFilter()">
+                <label class="form-check-label" for="ScienceCheckbox">Science</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="BoardGamesCheckbox" onclick="updateFilter()">
+                <label class="form-check-label" for="BoardGamesCheckbox">Board Games</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="ArtCheckbox" onclick="updateFilter()">
+                <label class="form-check-label" for="ArtCheckbox">Art</label>
+            </div>
+
+        </div>
+
+        <div class="usersContainer">
+
+            <div class="card card-block mx-2 profile-card" style="width: 300px; height: 400px;">
+                <img class="card-img-top" src="https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png" alt="profile image">
+                <div class="card-body">
+                    <h5 class="card-title">User Name</h5>
+                    <p class="card-text age-location">Age - Location</p>
+                    <p class="card-text">User's Bio</p>
+                    <div class="profile-card-btns">
+                        <a href="#" class="btn btn-primary">Like</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card card-block mx-2 profile-card" style="width: 300px; height: 400px;">
+                <img class="card-img-top" src="https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png" alt="profile image">
+                <div class="card-body">
+                    <h5 class="card-title">User Name</h5>
+                    <p class="card-text age-location">Age - Location</p>
+                    <p class="card-text">User's Bio</p>
+                    <div class="profile-card-btns">
+                        <a href="#" class="btn btn-primary">Like</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card card-block mx-2 profile-card" style="width: 300px; height: 400px;">
+                <img class="card-img-top" src="https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png" alt="profile image">
+                <div class="card-body">
+                    <h5 class="card-title">User Name</h5>
+                    <p class="card-text age-location">Age - Location</p>
+                    <p class="card-text">User's Bio</p>
+                    <div class="profile-card-btns">
+                        <a href="#" class="btn btn-primary">Like</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card card-block mx-2 profile-card" style="width: 300px; height: 400px;">
+                <img class="card-img-top" src="https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png" alt="profile image">
+                <div class="card-body">
+                    <h5 class="card-title">User Name</h5>
+                    <p class="card-text age-location">Age - Location</p>
+                    <p class="card-text">User's Bio</p>
+                    <div class="profile-card-btns">
+                        <a href="#" class="btn btn-primary">Like</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card card-block mx-2 profile-card" style="width: 300px; height: 400px;">
+                <img class="card-img-top" src="https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png" alt="profile image">
+                <div class="card-body">
+                    <h5 class="card-title">User Name</h5>
+                    <p class="card-text age-location">Age - Location</p>
+                    <p class="card-text">User's Bio</p>
+                    <div class="profile-card-btns">
+                        <a href="#" class="btn btn-primary">Like</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card card-block mx-2 profile-card" style="width: 300px; height: 400px;">
+                <img class="card-img-top" src="https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png" alt="profile image">
+                <div class="card-body">
+                    <h5 class="card-title">User Name</h5>
+                    <p class="card-text age-location">Age - Location</p>
+                    <p class="card-text">User's Bio</p>
+                    <div class="profile-card-btns">
+                        <a href="#" class="btn btn-primary">Like</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card card-block mx-2 profile-card" style="width: 300px; height: 400px;">
+                <img class="card-img-top" src="https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png" alt="profile image">
+                <div class="card-body">
+                    <h5 class="card-title">User Name</h5>
+                    <p class="card-text age-location">Age - Location</p>
+                    <p class="card-text">User's Bio</p>
+                    <div class="profile-card-btns">
+                        <a href="#" class="btn btn-primary">Like</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card card-block mx-2 profile-card" style="width: 300px; height: 400px;">
+                <img class="card-img-top" src="https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png" alt="profile image">
+                <div class="card-body">
+                    <h5 class="card-title">User Name</h5>
+                    <p class="card-text age-location">Age - Location</p>
+                    <p class="card-text">User's Bio</p>
+                    <div class="profile-card-btns">
+                        <a href="#" class="btn btn-primary">Like</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card card-block mx-2 profile-card" style="width: 300px; height: 400px;">
+                <img class="card-img-top" src="https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png" alt="profile image">
+                <div class="card-body">
+                    <h5 class="card-title">User Name</h5>
+                    <p class="card-text age-location">Age - Location</p>
+                    <p class="card-text">User's Bio</p>
+                    <div class="profile-card-btns">
+                        <a href="#" class="btn btn-primary">Like</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card card-block mx-2 profile-card" style="width: 300px; height: 400px;">
+                <img class="card-img-top" src="https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png" alt="profile image">
+                <div class="card-body">
+                    <h5 class="card-title">User Name</h5>
+                    <p class="card-text age-location">Age - Location</p>
+                    <p class="card-text">User's Bio</p>
+                    <div class="profile-card-btns">
+                        <a href="#" class="btn btn-primary">Like</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card card-block mx-2 profile-card" style="width: 300px; height: 400px;">
+                <img class="card-img-top" src="https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png" alt="profile image">
+                <div class="card-body">
+                    <h5 class="card-title">User Name</h5>
+                    <p class="card-text age-location">Age - Location</p>
+                    <p class="card-text">User's Bio</p>
+                    <div class="profile-card-btns">
+                        <a href="#" class="btn btn-primary">Like</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card card-block mx-2 profile-card" style="width: 300px; height: 400px;">
+                <img class="card-img-top" src="https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png" alt="profile image">
+                <div class="card-body">
+                    <h5 class="card-title">User Name</h5>
+                    <p class="card-text age-location">Age - Location</p>
+                    <p class="card-text">User's Bio</p>
+                    <div class="profile-card-btns">
+                        <a href="#" class="btn btn-primary">Like</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
     <script>
-    $(document).ready(function() {
-      $("#Logout").on('click', function() {
-        $.ajax({
-          method: 'POST',
-          url: 'home.php',
-          data: {
-            logout: 1
-          },
-          dataType: 'text'
-        }).done(function() {
-          window.location = 'index.php';
-        })
-      })
-    });
-  </script>
+        $(document).ready(function() {
+            $("#Logout").on('click', function() {
+                $.ajax({
+                    method: 'POST',
+                    url: 'home.php',
+                    data: {
+                        logout: 1
+                    },
+                    dataType: 'text'
+                }).done(function() {
+                    window.location = 'index.php';
+                })
+            });
+
+            $("#minAgeFilter").on('input', function() {
+                $('#minAgeVal').html($('#minAgeFilter').val())
+
+                $('#maxAgeFilter').attr({
+                    "min": $('#minAgeFilter').val()
+                });
+            });
+
+            $("#maxAgeFilter").on('input', function() {
+                $('#maxAgeVal').html($('#maxAgeFilter').val())
+
+                $('#minAgeFilter').attr({
+                    "max": $('#maxAgeFilter').val()
+                });
+            });
+
+            $("#maxDistance").on('input', function() {
+                $('#maxDistanceVal').html($('#maxDistance').val() + ' km')
+            });
+
+
+        });
+
+        function showAgeOptions() {
+            var checkbox = document.getElementById('filterByAge');
+            var aOptions = document.getElementById('ageOptions');
+
+            if (checkbox.checked) {
+                aOptions.style.display = "block";
+            } else {
+                aOptions.style.display = "none";
+            }
+        }
+
+        function showDistanceOptions() {
+            var checkbox = document.getElementById('filterByDistance');
+            var dOptions = document.getElementById('distanceOptions');
+
+            if (checkbox.checked) {
+                dOptions.style.display = "block";
+            } else {
+                dOptions.style.display = "none";
+            }
+        }
+    </script>
 </body>
 
 </html>

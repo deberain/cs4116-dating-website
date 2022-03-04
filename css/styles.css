@@ -70,3 +70,41 @@ body, html {
   .suggested-users h2 {
     color: white;
   }
+
+  .grid-container {
+    height: 100%;
+    display: grid;
+    grid-template-columns: 300px auto;
+
+  }
+
+  .filterOptionsContainer {
+    background-color: #343a40;
+    grid-column: 1;
+    padding: 15px;
+  }
+
+  .usersContainer {
+    background-color: #202731;
+    grid-column: 2;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 25px;
+    justify-content: space-around;
+  }
+
+  .navbar {
+    border-bottom: #202731 2px solid;
+  }
+
+  .filterOptionsContainer .form-label, .filterOptionsContainer .rangeval, .filterOptionsContainer .form-check-label {
+    color: white;
+  }
+
+  #distanceOptions {
+    display: none;
+  }
+
+  #ageOptions {
+    display: none;
+  }
