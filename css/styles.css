@@ -71,7 +71,7 @@ body, html {
     color: white;
   }
 
-  .grid-container {
+  .browse-grid-container {
     height: 100%;
     display: grid;
     grid-template-columns: 300px auto;
@@ -108,3 +108,61 @@ body, html {
   #ageOptions {
     display: none;
   }
+
+  .chats-grid-container {
+    height: 100%;
+    display: grid;
+    grid-template-columns: 300px auto 300px;
+  }
+
+  .chats-list {
+    grid-column: 1;
+    background-color: #343a40;
+    display: flexbox;
+    flex-direction: column;
+  }
+
+  .chat-body {
+    grid-column: 2;
+  }
+
+  .chat-profile {
+    grid-column: 3;
+    background-color: #343a40;
+  }
+
+  .chat-thumb {
+    height: 80px;
+    border-bottom: #202731 2px solid;
+    display: grid;
+    grid-template-columns: 80px auto;
+  }
+
+  .chat-thumb-profile-pic-container {
+    padding: 10px;
+    grid-column: 1;
+  }
+
+  .chat-thumb-profile-pic {
+    border-radius: 30px;
+  }
+
+  .chat-preview {
+    padding: 10px;
+    display: grid;
+    grid-template-rows: 20px auto;
+  }
+
+  .chat-preview-username {
+    color: white;
+  }
+
+  .chat-preview-content {
+    padding-top: 10px;
+    font-size: 0.8em;
+    color: #bababa;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+

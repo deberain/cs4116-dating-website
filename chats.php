@@ -65,22 +65,74 @@ if (isset($_POST['logout'])) {
         </nav>
     </header>
 
+    <div class="chats-grid-container">
+        <div class="chats-list">
+            <div class="chat-thumb">
+                <div class="chat-thumb-profile-pic-container">
+                    <img class="chat-thumb-profile-pic" src="https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png" width="60" height="60" alt="profile image">
+                </div>
+                <div class="chat-preview">
+                    <div class="chat-preview-username">
+                        User Name
+                    </div>
+                    <div class="chat-preview-content">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos rerum reprehenderit maiores voluptatum consectetur optio in nulla quisquam ut accusantium. Ullam molestiae nulla distinctio possimus? Voluptas beatae asperiores quos quaerat.
+                    </div>
+                </div>
+            </div>
+            <div class="chat-thumb">
+                <div class="chat-thumb-profile-pic-container">
+                    <img class="chat-thumb-profile-pic" src="https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png" width="60" height="60" alt="profile image">
+                </div>
+                <div class="chat-preview">
+                    <div class="chat-preview-username">
+                        User Name
+                    </div>
+                    <div class="chat-preview-content">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos rerum reprehenderit maiores voluptatum consectetur optio in nulla quisquam ut accusantium. Ullam molestiae nulla distinctio possimus? Voluptas beatae asperiores quos quaerat.
+                    </div>
+                </div>
+            </div>
+            <div class="chat-thumb">
+                <div class="chat-thumb-profile-pic-container">
+                    <img class="chat-thumb-profile-pic" src="https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png" width="60" height="60" alt="profile image">
+                </div>
+                <div class="chat-preview">
+                    <div class="chat-preview-username">
+                        User Name
+                    </div>
+                    <div class="chat-preview-content">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos rerum reprehenderit maiores voluptatum consectetur optio in nulla quisquam ut accusantium. Ullam molestiae nulla distinctio possimus? Voluptas beatae asperiores quos quaerat.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-body">
+
+        </div>
+
+        <div class="chat-profile">
+
+        </div>
+    </div>
+
     <script>
-    $(document).ready(function() {
-      $("#Logout").on('click', function() {
-        $.ajax({
-          method: 'POST',
-          url: 'home.php',
-          data: {
-            logout: 1
-          },
-          dataType: 'text'
-        }).done(function() {
-          window.location = 'index.php';
-        })
-      })
-    });
-  </script>
+        $(document).ready(function() {
+            $("#Logout").on('click', function() {
+                $.ajax({
+                    method: 'POST',
+                    url: 'home.php',
+                    data: {
+                        logout: 1
+                    },
+                    dataType: 'text'
+                }).done(function() {
+                    window.location = 'index.php';
+                })
+            })
+        });
+    </script>
 </body>
 
 </html>

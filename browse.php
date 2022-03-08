@@ -65,7 +65,7 @@ if (isset($_POST['logout'])) {
         </nav>
     </header>
 
-    <div class="grid-container">
+    <div class="browse-grid-container">
         <div class="filterOptionsContainer">
             <h5 class="text-white">Age and Distance options</h5>
             <div class="form-check">
