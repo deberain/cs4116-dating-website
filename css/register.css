@@ -1,4 +1,5 @@
 html, body {
+    background: #202731;
     height: 100%;
     width: 100%;
     top: 0;
@@ -15,10 +16,21 @@ html, body {
 }
 
 .registerForm {
-    border: 1px solid black;
+    border: 1px solid #2d2d2d;
     padding: 25px;
     margin: 10vh 10vw;
     min-width: 400px;
     width: 450px;
     max-width: 600px;
+    background: #f0f0f0;
+    font-family: 'Prompt', sans-serif;
+}
+
+.btn-purple {
+    background-color: rgb(252,8,255);
+    color: #ffffff;
+  }
+
+.text-small{
+    font-size: 14px;
 }
