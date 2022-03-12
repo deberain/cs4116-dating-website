@@ -87,10 +87,13 @@ body, html {
   .usersContainer {
     background-color: #202731;
     grid-column: 2;
-    display: flex;
-    flex-wrap: wrap;
-    padding: 25px;
-    justify-content: space-around;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 300px);
+    padding: 40px;
+    grid-row-gap: 40px;
+    grid-column-gap: 40px;
+    justify-content: center;
+    align-content: start;
   }
 
   .navbar {

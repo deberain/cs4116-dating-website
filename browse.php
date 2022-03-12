@@ -274,28 +274,6 @@ if (isset($_POST['logout'])) {
                     </div>
                 </div>
             </div>
-            <div class="card card-block mx-2 profile-card" style="width: 300px; height: 400px;">
-                <img class="card-img-top" src="https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png" alt="profile image">
-                <div class="card-body">
-                    <h5 class="card-title">User Name</h5>
-                    <p class="card-text age-location">Age - Location</p>
-                    <p class="card-text">User's Bio</p>
-                    <div class="profile-card-btns">
-                        <a href="#" class="btn btn-primary">Like</a>
-                    </div>
-                </div>
-            </div>
-            <div class="card card-block mx-2 profile-card" style="width: 300px; height: 400px;">
-                <img class="card-img-top" src="https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png" alt="profile image">
-                <div class="card-body">
-                    <h5 class="card-title">User Name</h5>
-                    <p class="card-text age-location">Age - Location</p>
-                    <p class="card-text">User's Bio</p>
-                    <div class="profile-card-btns">
-                        <a href="#" class="btn btn-primary">Like</a>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
