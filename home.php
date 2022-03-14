@@ -75,7 +75,7 @@ if (isset($_POST['logout'])) {
           </div>
           <div class="modal-body">
             <div class="card card-block profile-card">
-              <img class="card-img-top" src="https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png" alt="profile image">
+              <img class="card-img-top" id="currentUserPic" src="https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png" alt="profile image">
               <div class="card-body">
                 <h5 class="card-title"><?php echo $_SESSION['display_name'] ?></h5>
                 <p class="card-text age-location"><?php echo $_SESSION['age'] ?> - <?php echo $_SESSION['location'] ?></p>
@@ -147,7 +147,19 @@ if (isset($_POST['logout'])) {
         }).done(function() {
           window.location = 'index.php';
         })
-      })
+      });
+
+      var currentUserPic = <?php echo json_encode($_SESSION['picture']); ?>;
+
+      console.log(currentUserPic);
+
+      if (currentUserPic !== null) {
+        $("#currentUserPic").attr({
+          "src": currentUserPic
+        })
+      }
+
+
     });
   </script>
 </body>
