@@ -151,14 +151,11 @@ if (isset($_POST['logout'])) {
 
       var currentUserPic = <?php echo json_encode($_SESSION['picture']); ?>;
 
-      console.log(currentUserPic);
-
       if (currentUserPic !== null) {
         $("#currentUserPic").attr({
           "src": currentUserPic
         })
       }
-
 
     });
   </script>

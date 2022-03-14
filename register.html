@@ -47,7 +47,41 @@
                 </div>
                 <div class="col-5">
                   <label for="InputLocation" class="mb-0"></label>Where do you live?</label>
-                  <input type="text" class="form-control text-small" id="InputLocation" aria-describedby="Location" placeholder="Enter Location" name="Location" required>
+                  <select class="form-control text-small" id="InputLocation" name="Location" required>
+                    <option selected>Choose...</option>
+                    <option>Antrim</option>
+                    <option>Armagh</option>
+                    <option>Carlow</option>
+                    <option>Cavan</option>
+                    <option>Clare</option>
+                    <option>Cork</option>
+                    <option>Derry</option>
+                    <option>Donegal</option>
+                    <option>Down</option>
+                    <option>Dublin</option>
+                    <option>Fermanagh</option>
+                    <option>Galway</option>
+                    <option>Kerry</option>
+                    <option>Kildare</option>
+                    <option>Kilkenny</option>
+                    <option>Laois</option>
+                    <option>Leitrim</option>
+                    <option>Limerick</option>
+                    <option>Longford</option>
+                    <option>Louth</option>
+                    <option>Mayo</option>
+                    <option>Meath</option>
+                    <option>Monaghan</option>
+                    <option>Offaly</option>
+                    <option>Roscommon</option>
+                    <option>Sligo</option>
+                    <option>Tipperary</option>
+                    <option>Tyrone</option>
+                    <option>Waterford</option>
+                    <option>Westmeath</option>
+                    <option>Wexford</option>
+                    <option>Wicklow</option>
+                  </select>
                 </div>
               </div>
 
@@ -96,6 +130,11 @@
               var pref = $("#SelectPrefSex").val();
               var location = $("#InputLocation").val();
               var bio = $("#InputBio").val();
+
+              if(location == "Choose...") {
+                alert("Please enter your location.");
+                return false
+              }
     
               if(password == confirmedPassword) {
                   $.ajax({
@@ -121,7 +160,7 @@
                           return false;
                       }
                       if(result == "Success!") {
-                        window.location="home.php";
+                        document.location.href="home.php";
                       }
                       
                   });
