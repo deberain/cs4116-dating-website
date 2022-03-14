@@ -40,7 +40,7 @@
         }  
 
         // Create User
-        $sql = "INSERT INTO `users` (`user_id`, `username`, `password`) VALUES (NULL, '$username', '$encryptedPassword')";  
+        $sql = "INSERT INTO `users` (`user_id`, `username`, `password`, `user_type`, `banned`) VALUES (NULL, '$username', '$encryptedPassword', '2', '0')";  
         $result = mysqli_query($con, $sql);  
 
         // Get New User id
@@ -50,11 +50,17 @@
         $user_id = $row["user_id"];
 
         // Insert data into profile
-        $sql = "INSERT INTO `profiles` (`profileID`, `user_id`, `display_name`, `age`, `sex`, `preferred_sex`, `Location`, `Bio`, `picture`) VALUES (NULL, '$user_id', '$fullname', '$age', '$sex', '$pref', '$location', '$bio', NULL)";
+        $sql = "INSERT INTO `profiles` (`user_id`, `display_name`, `age`, `sex`, `preferred_sex`, `Location`, `Bio`, `picture`) VALUES ('$user_id', '$fullname', '$age', '$sex', '$pref', '$location', '$bio', NULL)";
             
         if($con->query($sql) === TRUE){  
             $_SESSION['LoggedIn'] = '1';
             $_SESSION['user'] = $username;
+            $_SESSION['display_name'] = $fullname;
+            $_SESSION['age'] = $age;
+            $_SESSION['location'] = $location;
+            $_SESSION['sex'] = $sex;
+            $_SESSION['pref'] = $pref;
+            $_SESSION['bio'] = $bio;
             exit('Success!');  
         }  
         else{  

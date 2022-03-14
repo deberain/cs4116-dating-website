@@ -44,13 +44,13 @@ if (isset($_POST['logout'])) {
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="home.php">Home </a>
+                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item active">
                         <a class="nav-link" href="browse.php">Browse </a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="#">Chats <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="chats.php">Chats </a>
                     </li>
                 </ul>
                 <ul class="navbar-nav ml-auto">
@@ -58,11 +58,39 @@ if (isset($_POST['logout'])) {
                         <a class="nav-link" href="#" id="Logout">Logout</a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="#">Profile</a>
+                        <a class="nav-link" href="#" data-toggle="modal" data-target="#profileModal"><?php echo $_SESSION['user'] ?></a>
                     </li>
                 </ul>
             </div>
         </nav>
+
+        <div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle"><?php echo $_SESSION['user'] ?></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="card card-block profile-card">
+                            <img class="card-img-top" src="https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png" alt="profile image">
+                            <div class="card-body">
+                                <h5 class="card-title"><?php echo $_SESSION['display_name'] ?></h5>
+                                <p class="card-text age-location"><?php echo $_SESSION['age'] ?> - <?php echo $_SESSION['location'] ?></p>
+                                <p class="card-text profile-card-bio"><?php echo $_SESSION['bio'] ?></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary">Edit Profile</button>
+                        <button type="button" data-dismiss="modal" class="btn btn-secondary">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </header>
 
     <div class="chats-grid-container">
