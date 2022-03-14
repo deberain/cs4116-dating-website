@@ -27,8 +27,22 @@
             $count = mysqli_num_rows($result);  
                 
             if($count == 1){
+                $user_id = $row['user_id'];
                 $_SESSION['LoggedIn'] = '1';
-                $_SESSION['user'] = $username;  
+                $_SESSION['user'] = $username;
+
+                $sql = "select * from `profiles` where user_id = '$user_id'";  
+                $result = mysqli_query($con, $sql);  
+                $row = mysqli_fetch_array($result, MYSQLI_ASSOC);  
+
+                $_SESSION['display_name'] = $row['display_name'];
+                $_SESSION['age'] = $row['age'];
+                $_SESSION['location'] = $row['location'];
+                $_SESSION['sex'] = $row['Male'];
+                $_SESSION['pref'] = $row['preferred_sex'];
+                $_SESSION['bio'] = $row['bio'];
+                $_SESSION['picture'] = $row['picture'];
+                  
                 exit("Login Successful");  
             }  
             else{  
