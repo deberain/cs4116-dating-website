@@ -95,51 +95,27 @@ if (isset($_POST['logout'])) {
 
     <div class="chats-grid-container">
         <div class="chats-list">
-            <div class="chat-thumb">
-                <div class="chat-thumb-profile-pic-container">
-                    <img class="chat-thumb-profile-pic" src="https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png" width="60" height="60" alt="profile image">
-                </div>
-                <div class="chat-preview">
-                    <div class="chat-preview-username">
-                        User Name
-                    </div>
-                    <div class="chat-preview-content">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos rerum reprehenderit maiores voluptatum consectetur optio in nulla quisquam ut accusantium. Ullam molestiae nulla distinctio possimus? Voluptas beatae asperiores quos quaerat.
-                    </div>
-                </div>
+            
+        </div>
+        <div class="chat-body" user_id="">
+            <div class="messages d-none">
+                
             </div>
-            <div class="chat-thumb">
-                <div class="chat-thumb-profile-pic-container">
-                    <img class="chat-thumb-profile-pic" src="https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png" width="60" height="60" alt="profile image">
-                </div>
-                <div class="chat-preview">
-                    <div class="chat-preview-username">
-                        User Name
-                    </div>
-                    <div class="chat-preview-content">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos rerum reprehenderit maiores voluptatum consectetur optio in nulla quisquam ut accusantium. Ullam molestiae nulla distinctio possimus? Voluptas beatae asperiores quos quaerat.
-                    </div>
-                </div>
-            </div>
-            <div class="chat-thumb">
-                <div class="chat-thumb-profile-pic-container">
-                    <img class="chat-thumb-profile-pic" src="https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png" width="60" height="60" alt="profile image">
-                </div>
-                <div class="chat-preview">
-                    <div class="chat-preview-username">
-                        User Name
-                    </div>
-                    <div class="chat-preview-content">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos rerum reprehenderit maiores voluptatum consectetur optio in nulla quisquam ut accusantium. Ullam molestiae nulla distinctio possimus? Voluptas beatae asperiores quos quaerat.
+            <div class="send-message-area d-none">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-10">
+                            <div class="form-group purple-border">
+                                <textarea class="form-control" id="message-box" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <button user_id="" id="sendButton" class="btn btn-purple ml-3 mt-4">Send</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="chat-body">
-
-        </div>
-
         <div class="chat-profile">
 
         </div>
@@ -158,6 +134,85 @@ if (isset($_POST['logout'])) {
                 }).done(function() {
                     window.location = 'index.php';
                 })
+            })
+
+            //Get List Of Matched Users
+            $.ajax({
+                method: 'POST',
+                url: 'handlers/chats.php',
+                data: {
+                    func: 'getChats'
+                },
+                dataType: 'text',
+                success: function(data){
+                    $( "div.chats-list" ).html(data);
+                },
+            })
+
+            $('.chats-list').on('click', '.chat-thumb', function() {
+                
+                var userId = $(this).attr('user_id');
+                var chatBodyId = $(this).parent().next().attr('user_id');
+                
+                if(chatBodyId != userId){
+                    $.ajax({
+                        method: 'POST',
+                        url: 'handlers/chats.php',
+                        data: {
+                            func: 'getChat',
+                            userId: userId
+                        },
+                        dataType: 'text',
+                        success: function(data){
+                            //make sure message box is showing i.e remove d-none
+                            $('div.chat-body').removeClass('d-none');
+                            $('div.messages').removeClass('d-none');
+                            $('div.send-message-area').removeClass('d-none');
+                            $('#sendButton').attr('user_id', userId);
+                            $( "div.messages" ).html(data);
+                            $('div.chat-body').attr('user_id', userId);
+                        
+                            
+                            
+                            //websocket listening...
+                            
+                        },
+                    })
+                }else{
+                    $('div.chat-body').attr('user_id', '');
+                    $('div.send-message-area').addClass('d-none');
+                    $('div.messages').html('');
+                    $('div.messages').addClass('d-none');
+                    $( 'div.chat-body' ).addClass('d-none');
+                   
+                }
+
+            });
+
+            $('.send-message-area').on('click', '#sendButton', function() {
+                var messageContent = $('textarea').val();
+                var userId = $(this).attr('user_id');
+                if(messageContent.length <1){
+                    alert('Message box is empty!');
+                }else{
+                    $('textarea').val('');
+                    $.ajax({
+                        method: 'POST',
+                        url: 'handlers/chats.php',
+                        data: {
+                            func: 'sendChat',
+                            userId: userId,
+                            messageContent: messageContent
+                        },
+                        dataType: 'text',
+                        success: function(data){
+                            alert(data);
+                        },
+                        error: function(jqXHR, textStatus, errorThrown){
+                            alert('Unable to send message:' . errorThrown);
+                        }
+                    })
+                }
             })
         });
     </script>

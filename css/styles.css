@@ -163,7 +163,7 @@ body, html {
   }
 
   .chats-grid-container {
-    height: 100%;
+    height: 91vh;
     display: grid;
     grid-template-columns: 300px auto 300px;
   }
@@ -177,6 +177,16 @@ body, html {
 
   .chat-body {
     grid-column: 2;
+  }
+
+  .messages{
+    background-color: white;
+    height: 75vh;
+    overflow: scroll;
+  }
+
+  .send-message-area{
+    height:16vh;
   }
 
   .chat-profile {
@@ -219,3 +229,73 @@ body, html {
     text-overflow: ellipsis;
   }
 
+  .message-received {
+    height: 83px;
+    border: 2px solid #dedede;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+  }
+
+  .message-received img {
+    float: left;
+    max-width: 60px;
+    width: 100%;
+    margin-right: 20px;
+    border-radius: 50%;
+  }
+
+  .time-right {
+    float: right;
+    color: #aaa;
+  }
+  
+  .time-left {
+    float: left;
+    color: #999;
+  }
+
+  .message-sent {
+    height: 83px;
+    border: 2px solid #dedede;
+    background-color: #ddd;;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+    border-color: #ccc;
+  }
+  
+  .message-sent img.right {
+    float: right;
+    margin-left: 20px;
+    margin-right:0;
+  }
+
+  .message-sent img {
+    float: left;
+    max-width: 60px;
+    width: 100%;
+    margin-right: 20px;
+    border-radius: 50%;
+  }
+
+  .purple-border textarea {
+    border: 3px solid rgb(252,8,255);;
+    margin: 10px;
+    padding: 0px;
+  }
+
+  .purple-border .form-control:focus {
+    border: 3px solid rgb(252,8,255);;
+    box-shadow: 0 0 0 0.2rem rgb(252,8,255, 0.25);;
+  }
+
+  .btn-purple {
+    background-color: rgb(252,8,255);
+    color: #ffffff;
+  }
+
+.text-small{
+    font-size: 14px;
+}
