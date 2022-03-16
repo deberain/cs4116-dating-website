@@ -75,7 +75,7 @@ if (isset($_POST['logout'])) {
                     </div>
                     <div class="modal-body">
                         <div class="card card-block profile-card">
-                            <img class="card-img-top" src="https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png" alt="profile image">
+                            <img class="card-img-top" src="images/default_profile_image.png" alt="profile image">
                             <div class="card-body">
                                 <h5 class="card-title"><?php echo $_SESSION['display_name'] ?></h5>
                                 <p class="card-text age-location"><?php echo $_SESSION['age'] ?> - <?php echo $_SESSION['location'] ?></p>
@@ -193,25 +193,25 @@ if (isset($_POST['logout'])) {
         <div class="usersContainer">
 
             <div class="card card-block mx-2 profile-card">
-                <img class="card-img-top" src="https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png" alt="profile image">
+                <img class="card-img-top" src="images/default_profile_image.png" alt="profile image">
                 <div class="card-body">
                     <h5 class="card-title">User Name</h5>
                     <p class="card-text age-location">Age - Location</p>
-                    <p class="card-text">User's Bio</p>
-                    <div class="profile-card-btns">
-                        <a href="#" class="btn btn-primary">Like</a>
-                    </div>
+                    <p class="card-text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quod quo veritatis fuga nisi illo est aliquid doloremque repellat ex nihil.</p>
+                </div>
+                <div class="profile-card-btns">
+                        <a href="#" class="btn btn-primary profile-card-btns-decline">Like</a>
                 </div>
             </div>
             <div class="card card-block mx-2 profile-card">
-                <img class="card-img-top" src="https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png" alt="profile image">
+                <img class="card-img-top" src="images/default_profile_image.png" alt="profile image">
                 <div class="card-body">
                     <h5 class="card-title">User Name</h5>
                     <p class="card-text age-location">Age - Location</p>
-                    <p class="card-text">User's Bio</p>
-                    <div class="profile-card-btns">
-                        <a href="#" class="btn btn-primary">Like</a>
-                    </div>
+                    <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam odio praesentium laborum magni, eaque earum minima numquam vero esse deleniti.</p>
+                </div>
+                <div class="profile-card-btns">
+                        <a href="#" class="btn btn-primary profile-card-btns-decline">Like</a>
                 </div>
             </div>
         </div>

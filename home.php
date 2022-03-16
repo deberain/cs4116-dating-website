@@ -74,7 +74,7 @@ if (isset($_POST['logout'])) {
           </div>
           <div class="modal-body">
             <div class="card card-block profile-card">
-              <img class="card-img-top" id="currentUserPic" src="https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png" alt="profile image">
+              <img class="card-img-top" id="currentUserPic" src="images/default_profile_image.png" alt="profile image">
               <div class="card-body">
                 <h5 class="card-title"><?php echo $_SESSION['display_name'] ?></h5>
                 <p class="card-text age-location"><?php echo $_SESSION['age'] ?> - <?php echo $_SESSION['location'] ?></p>
@@ -95,7 +95,7 @@ if (isset($_POST['logout'])) {
     <h2>Pending connections</h2>
     <div class="d-flex flex-row flex-nowrap overflow-auto">
       <div class="card card-block mx-2 profile-card">
-        <img class="card-img-top" src="https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png" alt="profile image">
+        <img class="card-img-top" src="images/default_profile_image.png" alt="profile image">
         <div class="card-body">
           <h5 class="card-title">User Name</h5>
           <p class="card-text age-location">Age - Location</p>
@@ -119,7 +119,7 @@ if (isset($_POST['logout'])) {
     <h2>Suggested Users</h2>
     <div class="d-flex flex-row flex-nowrap overflow-auto">
       <div class="card card-block mx-2 profile-card">
-        <img class="card-img-top" src="https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png" alt="profile image">
+        <img class="card-img-top" src="images/default_profile_image.png" alt="profile image">
         <div class="card-body">
           <h5 class="card-title">User Name</h5>
           <p class="card-text age-location">Age - Location</p>
