@@ -1,12 +1,10 @@
 <?php
     session_start();
-
     //If Already Logged IN
     if(isset($_SESSION['LoggedIn'])) {
         header('Location: home.php');
         exit();
     }
-
     if(isset($_POST['login'])) {
         include('config/connection.php');  
         $username = $_POST['username'];  
@@ -23,15 +21,16 @@
             
             $sql = "select * from `users` where username = '$username' and password = '$encryptedPassword'";  
             $result = mysqli_query($con, $sql);  
-            $row = mysqli_fetch_array($result, MYSQLI_ASSOC);  
+            $row = mysqli_fetch_array($result, MYSQLI_ASSOC); 
+            $userId = $row['user_id']; 
             $count = mysqli_num_rows($result);  
                 
             if($count == 1){
-                $user_id = $row['user_id'];
                 $_SESSION['LoggedIn'] = '1';
                 $_SESSION['user'] = $username;
+                $_SESSION['user_id'] = $userId;
 
-                $sql = "select * from `profiles` where user_id = '$user_id'";  
+                $sql = "select * from `profiles` where user_id = '$userId'";  
                 $result = mysqli_query($con, $sql);  
                 $row = mysqli_fetch_array($result, MYSQLI_ASSOC);  
 
