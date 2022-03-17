@@ -1,10 +1,12 @@
 <?php
     session_start();
+
     //If Already Logged IN
     if(isset($_SESSION['LoggedIn'])) {
         header('Location: home.php');
         exit();
     }
+
     if(isset($_POST['login'])) {
         include('config/connection.php');  
         $username = $_POST['username'];  
@@ -21,27 +23,12 @@
             
             $sql = "select * from `users` where username = '$username' and password = '$encryptedPassword'";  
             $result = mysqli_query($con, $sql);  
-            $row = mysqli_fetch_array($result, MYSQLI_ASSOC); 
-            $userId = $row['user_id']; 
+            $row = mysqli_fetch_array($result, MYSQLI_ASSOC);  
             $count = mysqli_num_rows($result);  
                 
             if($count == 1){
                 $_SESSION['LoggedIn'] = '1';
-                $_SESSION['user'] = $username;
-                $_SESSION['user_id'] = $userId;
-
-                $sql = "select * from `profiles` where user_id = '$userId'";  
-                $result = mysqli_query($con, $sql);  
-                $row = mysqli_fetch_array($result, MYSQLI_ASSOC);  
-
-                $_SESSION['display_name'] = $row['display_name'];
-                $_SESSION['age'] = $row['age'];
-                $_SESSION['location'] = $row['location'];
-                $_SESSION['sex'] = $row['Male'];
-                $_SESSION['pref'] = $row['preferred_sex'];
-                $_SESSION['bio'] = $row['bio'];
-                $_SESSION['picture'] = $row['picture'];
-                  
+                $_SESSION['user'] = $username;  
                 exit("Login Successful");  
             }  
             else{  
@@ -82,7 +69,7 @@
     <div id="login">
         <div class="login-form">
             <p>Login or register from here to access.</p>
-            <form name="loginForm">
+            <form name="loginForm" autocomplete="on">
                 <div class="form-group">
                     <label>User Name</label>
                     <input type="text" class="form-control" placeholder="User Name"  id="InputUsername" name="username">
@@ -90,6 +77,7 @@
                 <div class="form-group">
                     <label>Password</label>
                     <input type="password" class="form-control" placeholder="Password" id="InputPassword" name="password">
+                    <input type="checkbox" onclick="showPassword()"> Show Password
                 </div>
                 <p id="FailedLogin"></p>
                 <button type="button" class="btn btn-purple" id="Login">Login</button>
@@ -132,6 +120,15 @@
                 }
             });
         });
+
+        function showPassword() {
+            var pWord = document.getElementById("InputPassword");
+            if (pWord.type === "password") {
+                pWord.type = "text";
+            } else {
+                pWord.type = "password";
+            }
+        }
     </script>  
 </body>
 </html>
