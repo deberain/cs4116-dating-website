@@ -82,7 +82,7 @@
     <div id="login">
         <div class="login-form">
             <p>Login or register from here to access.</p>
-            <form name="loginForm">
+            <form name="loginForm" autocomplete="on">
                 <div class="form-group">
                     <label>User Name</label>
                     <input type="text" class="form-control" placeholder="User Name"  id="InputUsername" name="username">
@@ -90,6 +90,7 @@
                 <div class="form-group">
                     <label>Password</label>
                     <input type="password" class="form-control" placeholder="Password" id="InputPassword" name="password">
+                    <input type="checkbox" onclick="showPassword()"> Show Password
                 </div>
                 <p id="FailedLogin"></p>
                 <button type="button" class="btn btn-purple" id="Login">Login</button>
@@ -132,6 +133,15 @@
                 }
             });
         });
+        
+        function showPassword() {
+            var pWord = document.getElementById("InputPassword");
+            if (pWord.type === "password") {
+                pWord.type = "text";
+            } else {
+                pWord.type = "password";
+            }
+        }
     </script>  
 </body>
 </html>
