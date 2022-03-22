@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 09, 2022 at 08:30 PM
+-- Generation Time: Mar 22, 2022 at 10:04 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.1
 
@@ -114,14 +114,11 @@ CREATE TABLE `messages` (
 CREATE TABLE `profiles` (
   `user_id` int(11) NOT NULL,
   `display_name` varchar(30) NOT NULL,
-  `first_name` varchar(30) NOT NULL,
-  `last_name` varchar(30) NOT NULL,
-  `age` int(11) NOT NULL,
   `sex` varchar(6) NOT NULL,
   `preferred_sex` varchar(6) NOT NULL,
   `location` varchar(100) NOT NULL,
   `bio` varchar(260) NOT NULL,
-  `picture` varchar(200) NOT NULL
+  `picture` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -134,12 +131,12 @@ CREATE TABLE `users` (
   `user_id` int(11) NOT NULL,
   `username` varchar(20) NOT NULL,
   `password` varchar(100) NOT NULL,
+  `date_of_birth` date NOT NULL DEFAULT current_timestamp(),
   `user_type` int(8) NOT NULL,
   `banned` int(1) NOT NULL,
   `email` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- --------------------------------------------------------
 
 --
 -- Table structure for table `user_interests`
@@ -161,6 +158,14 @@ CREATE TABLE `user_roles` (
   `role_id` int(11) NOT NULL,
   `role_name` varchar(15) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `user_roles`
+--
+
+INSERT INTO `user_roles` (`role_id`, `role_name`) VALUES
+(1, 'Admin'),
+(2, 'normal');
 
 --
 -- Indexes for dumped tables
@@ -268,7 +273,7 @@ ALTER TABLE `messages`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT for table `user_interests`
@@ -280,7 +285,7 @@ ALTER TABLE `user_interests`
 -- AUTO_INCREMENT for table `user_roles`
 --
 ALTER TABLE `user_roles`
-  MODIFY `role_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `role_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
