@@ -59,8 +59,9 @@ body, html {
   }
 
   .profile-card img {
+    object-fit: cover;
+    height: 300px;
     width: 298px;
-    height: auto;
   }
 
   .profile-card-btns {
