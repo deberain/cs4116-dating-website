@@ -146,6 +146,55 @@ if (isset($_POST['logout'])) {
                 dataType: 'text',
                 success: function(data){
                     $( "div.chats-list" ).html(data);
+                    
+                    //Server Sent Event connection for real time updates.
+                    let eventSource = new EventSource("handlers/chats-sse.php");
+                    eventSource.onmessage = function(event){
+                        let passedData = event.data;
+                        let message = JSON.parse(passedData);
+                        if(message.error === 1) { 
+                            console.log("SSE Error: "+message.error_message);
+                            alert("SSE Error: "+message.error_message+"\nLogin again for real time message updates");
+                            eventSource.close();
+                            return;
+                        }else{
+                             let matches = message?.new_matches;
+                             let messages = message?.new_messages;
+                            if(matches?.length >0){
+                                console.log(matches);
+                                matches.forEach(element => $( "div.chats-list" ).prepend(element.chatSummary));
+                            }
+
+                            if(messages?.length >0){
+                                console.log(messages);
+                                for (let msg of messages) {
+                                    let chatSectionId = $('div.chat-body').attr('user_id');
+                                    if (chatSectionId === msg.other_user_id){
+                                        $( "div.messages" ).append(msg.message_content);
+                                    }
+                                    $('div.chat-thumb[user_id="'+ msg.other_user_id +'"]').remove();
+                                    $( "div.chats-list" ).prepend(msg.match_content);
+                                }
+                            }
+
+                            if(matches === undefined && messages === undefined){
+                                console.log(message);
+                            }
+                            
+                        }           
+                    }
+                    eventSource.onerror = function(event){
+                        if(eventSource.readyState !== EventSource.CLOSED){
+                            alert('An error occurred. Reloading the page is advisable. Click \'Ok\' to reload.');
+                            location.reload();  
+                        }
+                    }
+                    window.onunload = function(){
+                        eventSource.close();
+                        return;
+                    }
+                    
+                    
                 },
             })
 
@@ -171,10 +220,6 @@ if (isset($_POST['logout'])) {
                             $('#sendButton').attr('user_id', userId);
                             $( "div.messages" ).html(data);
                             $('div.chat-body').attr('user_id', userId);
-                        
-                            
-                            
-                            //websocket listening...
                             
                         },
                     })
@@ -206,10 +251,10 @@ if (isset($_POST['logout'])) {
                         },
                         dataType: 'text',
                         success: function(data){
-                            alert(data);
+                            console.log('message sent');
                         },
                         error: function(jqXHR, textStatus, errorThrown){
-                            alert('Unable to send message:' . errorThrown);
+                            alert("Unable to send message:" + errorThrown);
                         }
                     })
                 }
