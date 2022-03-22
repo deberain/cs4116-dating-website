@@ -29,18 +29,18 @@
                 $_SESSION['LoggedIn'] = '1';
                 $_SESSION['user'] = $username;
                 $_SESSION['user_id'] = $userId;
+                $_SESSION['DOB'] = $row['date_of_birth'];
 
                 $sql = "select * from `profiles` where user_id = '$userId'";  
                 $result = mysqli_query($con, $sql);  
                 $row = mysqli_fetch_array($result, MYSQLI_ASSOC);  
 
                 $_SESSION['display_name'] = $row['display_name'];
-                $_SESSION['age'] = $row['age'];
                 $_SESSION['location'] = $row['location'];
                 $_SESSION['sex'] = $row['Male'];
                 $_SESSION['pref'] = $row['preferred_sex'];
                 $_SESSION['bio'] = $row['bio'];
-                $_SESSION['picture'] = $row['picture'];
+                $_SESSION['photo'] = $row['picture'];
                   
                 exit("Login Successful");  
             }  

@@ -24,8 +24,8 @@
                   <input type="text" class="form-control text-small" id="InputUsername" aria-describedby="Name" placeholder="Enter Username" name="username" required>
                 </div>
                 <div class="col-5">
-                  <label for="InputFullName" class="mb-0">Enter name:</label>
-                  <input type="text" class="form-control text-small" id="InputFullName" aria-describedby="Name" placeholder="Enter Full Name" name="Name" required>
+                  <label for="InputBirthDate" class="mb-0"></label>Enter Date Of Birth:</label>
+                  <input type="date" class="form-control text-small" id="InputBirthDate" aria-describedby="Age" placeholder="Enter Age" name="Age" required>
                 </div>
               </div>
 
@@ -40,77 +40,6 @@
                 </div>
               </div>
 
-              <div class="form-row justify-content-around mb-2">
-                <div class="col-5">
-                  <label for="InputAge" class="mb-0"></label>How old are you?</label>
-                  <input type="text" class="form-control text-small" id="InputAge" aria-describedby="Age" placeholder="Enter Age" name="Age" required>
-                </div>
-                <div class="col-5">
-                  <label for="InputLocation" class="mb-0"></label>Where do you live?</label>
-                  <select class="form-control text-small" id="InputLocation" name="Location" required>
-                    <option selected>Choose...</option>
-                    <option>Antrim</option>
-                    <option>Armagh</option>
-                    <option>Carlow</option>
-                    <option>Cavan</option>
-                    <option>Clare</option>
-                    <option>Cork</option>
-                    <option>Derry</option>
-                    <option>Donegal</option>
-                    <option>Down</option>
-                    <option>Dublin</option>
-                    <option>Fermanagh</option>
-                    <option>Galway</option>
-                    <option>Kerry</option>
-                    <option>Kildare</option>
-                    <option>Kilkenny</option>
-                    <option>Laois</option>
-                    <option>Leitrim</option>
-                    <option>Limerick</option>
-                    <option>Longford</option>
-                    <option>Louth</option>
-                    <option>Mayo</option>
-                    <option>Meath</option>
-                    <option>Monaghan</option>
-                    <option>Offaly</option>
-                    <option>Roscommon</option>
-                    <option>Sligo</option>
-                    <option>Tipperary</option>
-                    <option>Tyrone</option>
-                    <option>Waterford</option>
-                    <option>Westmeath</option>
-                    <option>Wexford</option>
-                    <option>Wicklow</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="form-row justify-content-around mb-2">
-                <div class="col-5">
-                  <label for="SelectSex" class="mb-0"></label>Your sex:</label>
-                  <select class="form-control text-small" id="SelectSex" name="Sex">
-                    <option selected>Choose...</option>
-                    <option>Male</option>
-                    <option>Female</option>
-                    <option>Other</option>
-                  </select>
-                </div>
-                <div class="col-5">
-                  <label for="SelectPrefSex" class="mb-0">Preferred sex:</label>
-                  <select class="form-control text-small" id="SelectPrefSex" name="Pref">
-                    <option selected>Choose...</option>
-                    <option>Male</option>
-                    <option>Female</option>
-                    <option>Both</option>
-                  </select>
-                </div>
-              </div>
-
-
-              <div class="form-group mt-4 mb-2">
-                <label for="InputBio">Tell us about yourself!</label>
-                <textarea class="form-control" id="InputBio" rows="4" name="Bio"></textarea>
-              </div>
               <br>
               <button type="button" class="btn btn-purple px-3" id="reg">Submit</button>
             </form>
@@ -124,17 +53,24 @@
               var username = $("#InputUsername").val();
               var password = $("#InputPassword").val();
               var confirmedPassword = $("#ConfirmPassword").val();
-              var displayName = $("#InputFullName").val();
-              var age = $("#InputAge").val();
-              var sex = $("#SelectSex").val();
-              var pref = $("#SelectPrefSex").val();
-              var location = $("#InputLocation").val();
-              var bio = $("#InputBio").val();
+              var DOB = $("#InputBirthDate").val();
 
-              if(location == "Choose...") {
-                alert("Please enter your location.");
-                return false
+              var dateOfBirth = new Date(DOB);
+
+              if(dateOfBirth > Date.now()) {
+                alert("Invalid Date Of Birth entered");
+                return false;
               }
+
+              var ageDifMs = Date.now() - dateOfBirth;
+              var ageDate = new Date(ageDifMs);
+              var age = Math.abs(ageDate.getUTCFullYear() - 1970);
+
+              if(age < 18) {
+                alert("You must be at least 18 to join.");
+                return false;
+              }
+
     
               if(password == confirmedPassword) {
                   $.ajax({
@@ -143,12 +79,7 @@
                       data: {
                           username: username,
                           password: password,
-                          Name: displayName,
-                          Age: age,
-                          Sex: sex,
-                          Pref: pref,
-                          Location: location,
-                          Bio: bio
+                          DOB: DOB
                       },
                       dataType: "text"
                   }).done(function(res) {
@@ -160,7 +91,7 @@
                           return false;
                       }
                       if(result == "Success!") {
-                        document.location.href="home.php";
+                        document.location.href="register_profile.php";
                       }
                       
                   });

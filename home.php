@@ -39,7 +39,7 @@ if (isset($_POST['logout'])) {
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      
+
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
@@ -77,13 +77,13 @@ if (isset($_POST['logout'])) {
               <img class="card-img-top" id="currentUserPic" src="images/default_profile_image.png" alt="profile image">
               <div class="card-body">
                 <h5 class="card-title"><?php echo $_SESSION['display_name'] ?></h5>
-                <p class="card-text age-location"><?php echo $_SESSION['age'] ?> - <?php echo $_SESSION['location'] ?></p>
+                <p class="card-text age-location" id="age-location"></p>
                 <p class="card-text profile-card-bio"><?php echo $_SESSION['bio'] ?></p>
               </div>
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary">Edit Profile</button>
+            <button type="button" class="btn btn-primary" id="EditProfile">Edit Profile</button>
             <button type="button" data-dismiss="modal" class="btn btn-secondary">Close</button>
           </div>
         </div>
@@ -147,13 +147,29 @@ if (isset($_POST['logout'])) {
         })
       });
 
-      var currentUserPic = <?php echo json_encode($_SESSION['picture']); ?>;
+      $("#EditProfile").on('click', function() {
+        window.location = 'edit.php';
+      })
+
+      var currentUserPic = <?php echo json_encode($_SESSION['photo']); ?>;
 
       if (currentUserPic !== null) {
         $("#currentUserPic").attr({
           "src": currentUserPic
         })
       }
+
+      var userBirth = <?php echo json_encode($_SESSION['DOB']); ?>;
+
+      var userLocation = <?php echo json_encode($_SESSION['location']); ?>;
+
+      userBirth = new Date(userBirth);
+
+      var ageDifMs = Date.now() - userBirth;
+      var ageDate = new Date(ageDifMs);
+      var age = Math.abs(ageDate.getUTCFullYear() - 1970);
+
+      document.getElementById("age-location").innerHTML = age.toString() + " - " + userLocation.toString();
 
     });
   </script>

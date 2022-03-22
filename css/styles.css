@@ -299,3 +299,62 @@ body, html {
 .text-small{
     font-size: 14px;
 }
+
+.edit-profile-form-container {
+  height: 100%;
+  display: grid;
+  grid-template-columns: auto 600px auto;
+}
+
+.edit-profile-form {
+  height: 100%;
+  grid-column: 2;
+  background-color: #343a40;
+  padding: 25px;
+  color: white;
+  display: grid;
+  grid-template-columns: 80px auto 80px;
+}
+
+.edit-profile-options {
+  grid-column: 2;
+}
+
+
+.edit-profile-image {
+  margin-bottom: 20px;
+}
+
+.profile-image {
+  background-color: white;
+  border: black 2px solid;
+  object-fit: cover;
+  height: 300px;
+  width: 300px;
+  margin-bottom: 5px;
+}
+
+.edit-profile-display-name {
+  width: 400px;
+  margin-bottom: 20px;
+}
+
+.edit-profile-location {
+  width: 400px;
+  margin-bottom: 20px;
+}
+
+.edit-profile-sex {
+  width: 400px;
+  margin-bottom: 20px;
+}
+
+.edit-profile-pref-sex {
+  width: 400px;
+  margin-bottom: 20px;
+}
+
+.edit-profile-bio {
+  width: 400px;
+  margin-bottom: 10px;
+}

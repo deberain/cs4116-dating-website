@@ -34,3 +34,11 @@ html, body {
 .text-small{
     font-size: 14px;
 }
+
+.profile-image {
+    background-color: white;
+    object-fit: cover;
+    height: 300px;
+    width: 300px;
+    margin-bottom: 5px;
+  }

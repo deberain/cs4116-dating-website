@@ -75,16 +75,16 @@ if (isset($_POST['logout'])) {
                     </div>
                     <div class="modal-body">
                         <div class="card card-block profile-card">
-                            <img class="card-img-top" src="images/default_profile_image.png" alt="profile image">
+                            <img class="card-img-top" id="currentUserPic" src="images/default_profile_image.png" alt="profile image">
                             <div class="card-body">
                                 <h5 class="card-title"><?php echo $_SESSION['display_name'] ?></h5>
-                                <p class="card-text age-location"><?php echo $_SESSION['age'] ?> - <?php echo $_SESSION['location'] ?></p>
+                                <p class="card-text age-location" id="age-location"></p>
                                 <p class="card-text profile-card-bio"><?php echo $_SESSION['bio'] ?></p>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary">Edit Profile</button>
+                        <button type="button" class="btn btn-primary" id="EditProfile">Edit Profile</button>
                         <button type="button" data-dismiss="modal" class="btn btn-secondary">Close</button>
                     </div>
                 </div>
@@ -200,7 +200,7 @@ if (isset($_POST['logout'])) {
                     <p class="card-text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quod quo veritatis fuga nisi illo est aliquid doloremque repellat ex nihil.</p>
                 </div>
                 <div class="profile-card-btns">
-                        <a href="#" class="btn btn-primary profile-card-btns-decline">Like</a>
+                    <a href="#" class="btn btn-primary profile-card-btns-decline">Like</a>
                 </div>
             </div>
             <div class="card card-block mx-2 profile-card">
@@ -211,7 +211,7 @@ if (isset($_POST['logout'])) {
                     <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam odio praesentium laborum magni, eaque earum minima numquam vero esse deleniti.</p>
                 </div>
                 <div class="profile-card-btns">
-                        <a href="#" class="btn btn-primary profile-card-btns-decline">Like</a>
+                    <a href="#" class="btn btn-primary profile-card-btns-decline">Like</a>
                 </div>
             </div>
         </div>
@@ -233,6 +233,10 @@ if (isset($_POST['logout'])) {
                     window.location = 'index.php';
                 })
             });
+
+            $("#EditProfile").on('click', function() {
+                window.location = 'edit.php';
+            })
 
             $("#minAgeFilter").on('input', function() {
                 $('#minAgeVal').html($('#minAgeFilter').val())
@@ -278,6 +282,26 @@ if (isset($_POST['logout'])) {
                 dOptions.style.display = "none";
             }
         }
+
+        var currentUserPic = <?php echo json_encode($_SESSION['photo']); ?>;
+
+        if (currentUserPic !== null) {
+            $("#currentUserPic").attr({
+                "src": currentUserPic
+            })
+        }
+
+        var userBirth = <?php echo json_encode($_SESSION['DOB']); ?>;
+
+        var userLocation = <?php echo json_encode($_SESSION['location']); ?>;
+
+        userBirth = new Date(userBirth);
+
+        var ageDifMs = Date.now() - userBirth;
+        var ageDate = new Date(ageDifMs);
+        var age = Math.abs(ageDate.getUTCFullYear() - 1970);
+
+        document.getElementById("age-location").innerHTML = age.toString() + " - " + userLocation.toString();
     </script>
 </body>
 

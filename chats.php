@@ -75,16 +75,16 @@ if (isset($_POST['logout'])) {
                     </div>
                     <div class="modal-body">
                         <div class="card card-block profile-card">
-                            <img class="card-img-top" src="https://www.seekpng.com/png/detail/966-9665493_my-profile-icon-blank-profile-image-circle.png" alt="profile image">
+                            <img class="card-img-top" id="currentUserPic" src="images/default_profile_image.png" alt="profile image">
                             <div class="card-body">
                                 <h5 class="card-title"><?php echo $_SESSION['display_name'] ?></h5>
-                                <p class="card-text age-location"><?php echo $_SESSION['age'] ?> - <?php echo $_SESSION['location'] ?></p>
+                                <p class="card-text age-location" id="age-location"></p>
                                 <p class="card-text profile-card-bio"><?php echo $_SESSION['bio'] ?></p>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary">Edit Profile</button>
+                        <button type="button" class="btn btn-primary" id="EditProfile">Edit Profile</button>
                         <button type="button" data-dismiss="modal" class="btn btn-secondary">Close</button>
                     </div>
                 </div>
@@ -95,11 +95,11 @@ if (isset($_POST['logout'])) {
 
     <div class="chats-grid-container">
         <div class="chats-list">
-            
+
         </div>
         <div class="chat-body" user_id="">
             <div class="messages d-none">
-                
+
             </div>
             <div class="send-message-area d-none">
                 <div class="container">
@@ -136,6 +136,10 @@ if (isset($_POST['logout'])) {
                 })
             })
 
+            $("#EditProfile").on('click', function() {
+                window.location = 'edit.php';
+            })
+
             //Get List Of Matched Users
             $.ajax({
                 method: 'POST',
@@ -144,17 +148,17 @@ if (isset($_POST['logout'])) {
                     func: 'getChats'
                 },
                 dataType: 'text',
-                success: function(data){
-                    $( "div.chats-list" ).html(data);
+                success: function(data) {
+                    $("div.chats-list").html(data);
                 },
             })
 
             $('.chats-list').on('click', '.chat-thumb', function() {
-                
+
                 var userId = $(this).attr('user_id');
                 var chatBodyId = $(this).parent().next().attr('user_id');
-                
-                if(chatBodyId != userId){
+
+                if (chatBodyId != userId) {
                     $.ajax({
                         method: 'POST',
                         url: 'handlers/chats.php',
@@ -163,28 +167,28 @@ if (isset($_POST['logout'])) {
                             userId: userId
                         },
                         dataType: 'text',
-                        success: function(data){
+                        success: function(data) {
                             //make sure message box is showing i.e remove d-none
                             $('div.chat-body').removeClass('d-none');
                             $('div.messages').removeClass('d-none');
                             $('div.send-message-area').removeClass('d-none');
                             $('#sendButton').attr('user_id', userId);
-                            $( "div.messages" ).html(data);
+                            $("div.messages").html(data);
                             $('div.chat-body').attr('user_id', userId);
-                        
-                            
-                            
+
+
+
                             //websocket listening...
-                            
+
                         },
                     })
-                }else{
+                } else {
                     $('div.chat-body').attr('user_id', '');
                     $('div.send-message-area').addClass('d-none');
                     $('div.messages').html('');
                     $('div.messages').addClass('d-none');
-                    $( 'div.chat-body' ).addClass('d-none');
-                   
+                    $('div.chat-body').addClass('d-none');
+
                 }
 
             });
@@ -192,9 +196,9 @@ if (isset($_POST['logout'])) {
             $('.send-message-area').on('click', '#sendButton', function() {
                 var messageContent = $('textarea').val();
                 var userId = $(this).attr('user_id');
-                if(messageContent.length <1){
+                if (messageContent.length < 1) {
                     alert('Message box is empty!');
-                }else{
+                } else {
                     $('textarea').val('');
                     $.ajax({
                         method: 'POST',
@@ -205,15 +209,35 @@ if (isset($_POST['logout'])) {
                             messageContent: messageContent
                         },
                         dataType: 'text',
-                        success: function(data){
+                        success: function(data) {
                             alert(data);
                         },
-                        error: function(jqXHR, textStatus, errorThrown){
-                            alert('Unable to send message:' . errorThrown);
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            alert('Unable to send message:'.errorThrown);
                         }
                     })
                 }
             })
+
+            var currentUserPic = <?php echo json_encode($_SESSION['photo']); ?>;
+
+            if (currentUserPic !== null) {
+                $("#currentUserPic").attr({
+                    "src": currentUserPic
+                })
+            }
+
+            var userBirth = <?php echo json_encode($_SESSION['DOB']); ?>;
+
+            var userLocation = <?php echo json_encode($_SESSION['location']); ?>;
+
+            userBirth = new Date(userBirth);
+
+            var ageDifMs = Date.now() - userBirth;
+            var ageDate = new Date(ageDifMs);
+            var age = Math.abs(ageDate.getUTCFullYear() - 1970);
+
+            document.getElementById("age-location").innerHTML = age.toString() + " - " + userLocation.toString();
         });
     </script>
 </body>

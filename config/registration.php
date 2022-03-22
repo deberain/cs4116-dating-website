@@ -4,26 +4,13 @@
     include('connection.php');
     $username = $_POST['username'];  
     $password = $_POST['password'];
-    $fullname = $_POST['Name'];  
-    $age = $_POST['Age']; 
-    $sex = $_POST['Sex'];
-    $pref = $_POST['Pref'];
-    $location = $_POST['Location'];
-    $bio = $_POST['Bio'];
+    $DOB = $_POST['DOB']; 
         
         //to prevent from mysqli injection  
         $username = stripcslashes($username);  
-        $password = stripcslashes($password);
-        $fullname = stripcslashes($fullname);  
-        $age = stripcslashes($age);   
-        $location = stripcslashes($location);    
-        $bio = stripcslashes($bio);    
+        $password = stripcslashes($password);    
         $username = mysqli_real_escape_string($con, $username);  
-        $password = mysqli_real_escape_string($con, $password);  
-        $fullname = mysqli_real_escape_string($con, $fullname);  
-        $age = mysqli_real_escape_string($con, $age);  
-        $location = mysqli_real_escape_string($con, $location);  
-        $bio = mysqli_real_escape_string($con, $bio);  
+        $password = mysqli_real_escape_string($con, $password); 
 
         // Encrypt password to be stored in database
         $encryptedPassword = md5($password);
@@ -39,7 +26,7 @@
         }  
 
         // Create User
-        $sql = "INSERT INTO `users` (`user_id`, `username`, `password`, `user_type`, `banned`, `email`) VALUES (NULL, '$username', '$encryptedPassword', 2, 0, NULL)";  
+        $sql = "INSERT INTO `users` (`user_id`, `username`, `password`, `date_of_birth`, `user_type`, `banned`, `email`) VALUES (NULL, '$username', '$encryptedPassword', '$DOB', 2, 0, NULL)";  
         $result = mysqli_query($con, $sql);  
 
         // Get New User id
@@ -47,23 +34,12 @@
         $result = mysqli_query($con, $sql);  
         $row = mysqli_fetch_array($result, MYSQLI_ASSOC);  
         $user_id = $row["user_id"];
-        $_SESSION['user_id'] = $user_id;
 
-        // Insert data into profile
-        $sql = "INSERT INTO `profiles` (`user_id`, `display_name`, `first_name`, `last_name`, `age`, `sex`, `preferred_sex`, `location`, `bio`, `picture`) VALUES ('$user_id', '$fullname', '', '', '$age', '$sex', '$pref', '$location', '$bio', '')";
+        $_SESSION['user_id'] = $user_id;
+        $_SESSION['user'] = $username;
+        $_SESSION['DOB'] = $DOB;
         
-        if($con->query($sql) === TRUE){  
-            $_SESSION['LoggedIn'] = '1';
-            $_SESSION['user'] = $username;
-            $_SESSION['display_name'] = $fullname;
-            $_SESSION['age'] = $age;
-            $_SESSION['location'] = $location;
-            $_SESSION['sex'] = $sex;
-            $_SESSION['pref'] = $pref;
-            $_SESSION['bio'] = $bio;
-            exit('Success!');  
-        }  
-        else{  
-            exit('Failure');  
-        }     
+        $_SESSION['userReg'] = '1';
+
+        exit('Success!');
 ?>  
