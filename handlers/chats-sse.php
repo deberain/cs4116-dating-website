@@ -55,9 +55,6 @@ while(1) {
 }
 
 function checkForUpdates($userId, $lastMatchId, $lastMessageId){
-	
-	//For some reason I couldn't get it to work by including DB connection file.
-	//If you figure it out could you let me know why.
 	include('../config/connection.php'); 
 	
 	$newMatches = array();
