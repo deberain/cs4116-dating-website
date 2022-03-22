@@ -1,6 +1,7 @@
 <?php
 session_start();
-
+$_SESSION['last_match_id'] = 0;
+$_SESSION['last_message_id'] = 0;
 class ChatSummary{
     private $userId;
     private $userName;
@@ -9,6 +10,8 @@ class ChatSummary{
     private $lastMessageSentByLoggedInUser;
     private $dateOfLastMessage;
     private $matchDate;
+    private $matchId;
+    private $lastMessageId;
 
     public function __set($name, $value) {
         $this->$name = $value;
@@ -47,9 +50,6 @@ if(isset($_POST['func']))
             //userId not passed in the request
             http_response_code(404);
         }
-    }else if($_POST['func'] == "listenToChat")
-    {
-        listenToChat();
     }
 }else{
     header('Location: index.php');
@@ -62,12 +62,16 @@ function getChats(){
     include('../config/connection.php'); 
     $listOfChatSummarys = [];
     $userId = $_SESSION['user_id'];
-    $sql = "SELECT user_one_id, user_two_id, date FROM matches WHERE user_one_id = '$userId' OR user_two_id = '$userId' ORDER BY date DESC;";
+    $sql = "SELECT * FROM matches WHERE user_one_id = '$userId' OR user_two_id = '$userId' ORDER BY date DESC;";
     $result = mysqli_query($con, $sql);  
     $count = mysqli_num_rows($result);  
     if($count >= 1){
         while($row = mysqli_fetch_assoc($result)) {
             $chatSummary = new ChatSummary();
+            $chatSummary->matchId = $row['match_id'];
+            if($chatSummary->matchId > $_SESSION['last_match_id']){
+                $_SESSION['last_match_id'] = $chatSummary->matchId;
+            }
             if ($row['user_one_id']==$userId){
                 $chatSummary->userId = $row['user_two_id'];
             }else{
@@ -92,18 +96,20 @@ function getChats(){
                 }
 
 
-                $sql = "SELECT * FROM messages WHERE sender_id = '$chatSummary->userId' AND receiver_id = '$userId' OR receiver_id = '$chatSummary->userId' AND sender_id = '$userId' ORDER BY date DESC LIMIT 1";
+                $sql = "SELECT * FROM messages WHERE (sender_id = '$chatSummary->userId' AND receiver_id = '$userId') OR (receiver_id = '$chatSummary->userId' AND sender_id = '$userId') ORDER BY date DESC LIMIT 1";
                 $resultThree = mysqli_query($con, $sql); 
                 $count = mysqli_num_rows($resultThree); 
                 if ($count<1){
                     $chatSummary->lastMessage = 'No messages at present';
                     $chatSummary->lastMessageSentByLoggedInUser = null;
                     $chatSummary->dateOfLastMessage = 0;
+                    $chatSummary->messageId = 0;
                     array_push($listOfChatSummarys, $chatSummary);
                     continue;
                 }else{
                     $rowThree = mysqli_fetch_assoc($resultThree);
                     $chatSummary->lastMessage = $rowThree['message_content'];
+                    $chatSummary->messageId = $rowThree['message_id'];
                     if ($rowThree['sender_id']==$userId){
                         $chatSummary->lastMessageSentByLoggedInUser = true;
                     }else{
@@ -136,6 +142,7 @@ function getChats(){
             });
         }
 
+
         foreach ($listOfChatSummarys as $chatSumm) {
             echo '<div user_id="' . $chatSumm->userId . '" style="cursor: pointer;" class="chat-thumb">
                     <div class="chat-thumb-profile-pic-container">
@@ -146,16 +153,20 @@ function getChats(){
                             ' . $chatSumm->userName . '
                         </div>
                     <div class="chat-preview-content">';
-            if($chatSumm === null){
+            if($chatSumm->lastMessageSentByLoggedInUser === null){
                 echo 'No messages at present!';
+                
             }else{
                 if ($chatSumm->lastMessageSentByLoggedInUser){
                     echo 'You: ' . $chatSumm->lastMessage;
                 }else{
                     echo $chatSumm->userName . ': ' . $chatSumm->lastMessage;
                 }
+                if($chatSumm->messageId > $_SESSION['last_message_id']){
+                    $_SESSION['last_message_id'] = $chatSumm->messageId;
+                }
             }
-            echo '</div></div></div>';
+            echo '</div></div></div>';       
         }
         mysqli_close($con);
         return;
@@ -225,9 +236,5 @@ function sendChat(){
     }
     mysqli_close($con);
     return;
-}
-
-function listenToChat(){
-    //websocket
 }
 ?>
