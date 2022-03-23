@@ -69,7 +69,7 @@
 <body>
     <section class="welcome text-center">
       <h1>Welcome to Cupid.com</h1>
-      <img defer class="rounded" src="images/Pink_Heart.png" alt="sexy man" width="275" height="250"/>
+      <img defer class="rounded" src="assets/Pink_Heart.png" alt="sexy man" width="275" height="250"/>
       <p />
       <h3>Looking for Love? You came to the right place!</h3>
 

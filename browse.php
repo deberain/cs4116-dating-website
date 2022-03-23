@@ -75,7 +75,7 @@ if (isset($_POST['logout'])) {
                     </div>
                     <div class="modal-body">
                         <div class="card card-block profile-card">
-                            <img class="card-img-top" id="currentUserPic" src="images/default_profile_image.png" alt="profile image">
+                            <img class="card-img-top" id="currentUserPic" src="assets/default_profile_image.png" alt="profile image">
                             <div class="card-body">
                                 <h5 class="card-title"><?php echo $_SESSION['display_name'] ?></h5>
                                 <p class="card-text age-location" id="age-location"></p>

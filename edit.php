@@ -75,7 +75,7 @@ if (isset($_POST['logout'])) {
                     </div>
                     <div class="modal-body">
                         <div class="card card-block profile-card">
-                            <img class="card-img-top" id="currentUserPic" src="images/default_profile_image.png" alt="profile image">
+                            <img class="card-img-top" id="currentUserPic" src="assets/default_profile_image.png" alt="profile image">
                             <div class="card-body">
                                 <h5 class="card-title"><?php echo $_SESSION['display_name'] ?></h5>
                                 <p class="card-text age-location" id="age-location"></p>
@@ -100,7 +100,7 @@ if (isset($_POST['logout'])) {
 
                 <form name="form" method="post" action="upload.php" enctype="multipart/form-data">
                     <div class="edit-profile-image">
-                        <img class="profile-image" id="editCurrentUserPic" src="images/default_profile_image.png" alt="profile image"> <br />
+                        <img class="profile-image" id="editCurrentUserPic" src="assets/default_profile_image.png" alt="profile image"> <br />
                         <input type="file" accept="image/*" id="uploadProfileImage" name="chosenProfileImage" value="Upload Image">
                     </div>
                     <div class="edit-profile-display-name">
