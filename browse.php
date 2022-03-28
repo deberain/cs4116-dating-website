@@ -75,16 +75,16 @@ if (isset($_POST['logout'])) {
                     </div>
                     <div class="modal-body">
                         <div class="card card-block profile-card">
-                            <img class="card-img-top" src="images/default_profile_image.png" alt="profile image">
+                            <img class="card-img-top" id="currentUserPic" src="assets/default_profile_image.png" alt="profile image">
                             <div class="card-body">
                                 <h5 class="card-title"><?php echo $_SESSION['display_name'] ?></h5>
-                                <p class="card-text age-location"><?php echo $_SESSION['age'] ?> - <?php echo $_SESSION['location'] ?></p>
+                                <p class="card-text age-location" id="age-location"></p>
                                 <p class="card-text profile-card-bio"><?php echo $_SESSION['bio'] ?></p>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary">Edit Profile</button>
+                        <button type="button" class="btn btn-primary" id="EditProfile">Edit Profile</button>
                         <button type="button" data-dismiss="modal" class="btn btn-secondary">Close</button>
                     </div>
                 </div>
@@ -192,28 +192,6 @@ if (isset($_POST['logout'])) {
 
         <div class="usersContainer">
 
-            <div class="card card-block mx-2 profile-card">
-                <img class="card-img-top" src="images/default_profile_image.png" alt="profile image">
-                <div class="card-body">
-                    <h5 class="card-title">User Name</h5>
-                    <p class="card-text age-location">Age - Location</p>
-                    <p class="card-text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quod quo veritatis fuga nisi illo est aliquid doloremque repellat ex nihil.</p>
-                </div>
-                <div class="profile-card-btns">
-                        <a href="#" class="btn btn-primary profile-card-btns-decline">Like</a>
-                </div>
-            </div>
-            <div class="card card-block mx-2 profile-card">
-                <img class="card-img-top" src="images/default_profile_image.png" alt="profile image">
-                <div class="card-body">
-                    <h5 class="card-title">User Name</h5>
-                    <p class="card-text age-location">Age - Location</p>
-                    <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam odio praesentium laborum magni, eaque earum minima numquam vero esse deleniti.</p>
-                </div>
-                <div class="profile-card-btns">
-                        <a href="#" class="btn btn-primary profile-card-btns-decline">Like</a>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -234,6 +212,10 @@ if (isset($_POST['logout'])) {
                 })
             });
 
+            $("#EditProfile").on('click', function() {
+                window.location = 'edit.php';
+            })
+
             $("#minAgeFilter").on('input', function() {
                 $('#minAgeVal').html($('#minAgeFilter').val())
 
@@ -252,6 +234,99 @@ if (isset($_POST['logout'])) {
 
             $("#maxDistance").on('input', function() {
                 $('#maxDistanceVal').html($('#maxDistance').val() + ' km')
+            });
+
+            var profiles = [];
+
+            $.ajax({
+                type: "GET",
+                url: "config/get_profiles.php",
+                async: false
+            }).done(function(res) {
+                profiles = JSON.parse(res);
+            });
+
+            console.log(profiles);
+
+            console.log(profiles.length);
+
+            $.ajax({
+                type: "GET",
+                url: "config/get_ages.php",
+                async: false
+            }).done(function(res) {
+                var ages = JSON.parse(res);
+
+                console.log(ages);
+
+                const usersContainer = document.getElementsByClassName("usersContainer")[0];
+
+                for (var i = 0; i < profiles.length; i++) {
+                    var profile = profiles[i];
+
+                    var card = document.createElement("div");
+                    card.className = "card card-block mx-2 profile-card";
+
+                    var image = document.createElement("img");
+                    image.className = "card-img-top";
+                    image.setAttribute("src", profile["picture"]);
+                    image.setAttribute("alt", "profile image");
+                    card.appendChild(image);
+
+                    var cardbody = document.createElement("div");
+                    cardbody.className = "card-body";
+
+                    var username = document.createElement("h5");
+                    username.className = "card-title";
+                    username.innerHTML = profile["display_name"];
+                    cardbody.appendChild(username);
+
+                    var space = document.createElement("p");
+                    cardbody.appendChild(space);
+
+                    var gender = document.createElement("h6");
+                    gender.className = "card-title";
+                    gender.innerHTML = profile["sex"];
+                    gender.style = "font-size:15px";
+		    cardbody.appendChild(gender);
+ 
+                    var agelocation = document.createElement("p");
+                    agelocation.className = "card-text age-location";
+
+                    var userDOB = new Date(ages[i]);
+
+                    var ageDifMs = Date.now() - userDOB;
+                    var ageDate = new Date(ageDifMs);
+                    var age = Math.abs(ageDate.getUTCFullYear() - 1970);
+
+                    agelocation.innerHTML = age.toString() + " - " + profile["location"];
+                    cardbody.appendChild(agelocation);
+
+                    var line = document.createElement("hr");
+                    cardbody.appendChild(line);
+
+                    var bio = document.createElement("p");
+                    bio.className = "card-text";
+                    bio.innerHTML = profile["bio"];
+                    cardbody.appendChild(bio);
+
+                    card.append(cardbody);
+
+                    var cardbuttons = document.createElement("div");
+                    cardbuttons.className = "profile-card-btns";
+
+                    var likebutton = document.createElement("a");
+                    likebutton.setAttribute("href", "#");
+                    likebutton.className = "btn btn-primary profile-card-btns-decline";
+                    likebutton.innerHTML = "Like";
+                    cardbuttons.appendChild(likebutton);
+
+
+                    card.appendChild(cardbuttons);
+
+
+                    usersContainer.appendChild(card);
+                }
             });
 
 
@@ -278,6 +353,26 @@ if (isset($_POST['logout'])) {
                 dOptions.style.display = "none";
             }
         }
+
+        var currentUserPic = <?php echo json_encode($_SESSION['photo']); ?>;
+
+        if (currentUserPic !== null) {
+            $("#currentUserPic").attr({
+                "src": currentUserPic
+            })
+        }
+
+        var userBirth = <?php echo json_encode($_SESSION['DOB']); ?>;
+
+        var userLocation = <?php echo json_encode($_SESSION['location']); ?>;
+
+        userBirth = new Date(userBirth);
+
+        var ageDifMs = Date.now() - userBirth;
+        var ageDate = new Date(ageDifMs);
+        var age = Math.abs(ageDate.getUTCFullYear() - 1970);
+
+        document.getElementById("age-location").innerHTML = age.toString() + " - " + userLocation.toString();
     </script>
 </body>
 
