@@ -1,7 +1,7 @@
 <?php      
         $host = "localhost";  
         $user = "root";
-        $password = '';  
+        $password = 'password';  
         $db_name = "cupid_db";  
           
         $con = mysqli_connect($host, $user, $password, $db_name);  

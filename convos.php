@@ -143,7 +143,7 @@ if (isset($_POST['logout'])) {
             //Get List Of Matched Users
             $.ajax({
                 method: 'POST',
-                url: 'handlers/chats.php',
+                url: 'handlers/convos.php',
                 data: {
                     func: 'getChats'
                 },
@@ -152,7 +152,7 @@ if (isset($_POST['logout'])) {
                     $( "div.chats-list" ).html(data);
                     
                     //Server Sent Event connection for real time updates.
-                    let eventSource = new EventSource("handlers/chats-sse.php");
+                    let eventSource = new EventSource("handlers/convos-sse.php");
                     eventSource.onmessage = function(event){
                         let passedData = event.data;
                         let message = JSON.parse(passedData);
@@ -210,7 +210,7 @@ if (isset($_POST['logout'])) {
                 if (chatBodyId != userId) {
                     $.ajax({
                         method: 'POST',
-                        url: 'handlers/chats.php',
+                        url: 'handlers/convos.php',
                         data: {
                             func: 'getChat',
                             userId: userId

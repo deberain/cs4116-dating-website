@@ -49,7 +49,7 @@ if (isset($_POST['logout'])) {
             <a class="nav-link" href="browse.php">Browse </a>
           </li>
           <li class="nav-item active">
-            <a class="nav-link" href="chats.php">Chats </a>
+            <a class="nav-link" href="convos.php">Chats </a>
           </li>
         </ul>
         <ul class="navbar-nav ml-auto">
