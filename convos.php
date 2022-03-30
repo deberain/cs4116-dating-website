@@ -117,7 +117,6 @@ if (isset($_POST['logout'])) {
             </div>
         </div>
         <div class="chat-profile">
-
         </div>
     </div>
 
@@ -143,7 +142,7 @@ if (isset($_POST['logout'])) {
             //Get List Of Matched Users
             $.ajax({
                 method: 'POST',
-                url: 'handlers/chats.php',
+                url: 'handlers/convos.php',
                 data: {
                     func: 'getChats'
                 },
@@ -152,7 +151,7 @@ if (isset($_POST['logout'])) {
                     $( "div.chats-list" ).html(data);
                     
                     //Server Sent Event connection for real time updates.
-                    let eventSource = new EventSource("handlers/chats-sse.php");
+                    let eventSource = new EventSource("handlers/convos-sse.php");
                     eventSource.onmessage = function(event){
                         let passedData = event.data;
                         let message = JSON.parse(passedData);
@@ -165,7 +164,9 @@ if (isset($_POST['logout'])) {
                              let matches = message?.new_matches;
                              let messages = message?.new_messages;
                             if(matches?.length >0){
+
                                 console.log(matches);
+                                $('div#no-matches-text').remove();
                                 matches.forEach(element => $( "div.chats-list" ).prepend(element.chatSummary));
                             }
 
@@ -175,6 +176,7 @@ if (isset($_POST['logout'])) {
                                     let chatSectionId = $('div.chat-body').attr('user_id');
                                     if (chatSectionId === msg.other_user_id){
                                         $( "div.messages" ).append(msg.message_content);
+                                        $("div.messages").scrollTop($("div.messages")[0].scrollHeight);
                                     }
                                     $('div.chat-thumb[user_id="'+ msg.other_user_id +'"]').remove();
                                     $( "div.chats-list" ).prepend(msg.match_content);
@@ -196,9 +198,7 @@ if (isset($_POST['logout'])) {
                     window.onunload = function(){
                         eventSource.close();
                         return;
-                    }
-                    
-                    
+                    }   
                 },
             })
 
@@ -210,7 +210,7 @@ if (isset($_POST['logout'])) {
                 if (chatBodyId != userId) {
                     $.ajax({
                         method: 'POST',
-                        url: 'handlers/chats.php',
+                        url: 'handlers/convos.php',
                         data: {
                             func: 'getChat',
                             userId: userId
@@ -224,7 +224,22 @@ if (isset($_POST['logout'])) {
                             $('#sendButton').attr('user_id', userId);
                             $("div.messages").html(data);
                             $('div.chat-body').attr('user_id', userId);
+                            $("div.messages").scrollTop($("div.messages")[0].scrollHeight);
                             
+                            //get profile details and populate right div.
+                            $.ajax({
+                                method: 'POST',
+                                url: 'handlers/convos.php',
+                                data: {
+                                    func: 'getProfile',
+                                    userId: userId
+                                },
+                                dataType: 'text',
+                                success: function(data) {
+                                    $("div.chat-profile").html(data);
+                                                           
+                                },
+                            })
                         },
                     })
                 } else {
@@ -234,6 +249,8 @@ if (isset($_POST['logout'])) {
                     $('div.messages').addClass('d-none');
                     $('div.chat-body').addClass('d-none');
 
+                    //remove profile details from right div
+                    $("div.chat-profile").html("");
                 }
 
             });
@@ -247,7 +264,7 @@ if (isset($_POST['logout'])) {
                     $('textarea').val('');
                     $.ajax({
                         method: 'POST',
-                        url: 'handlers/chats.php',
+                        url: 'handlers/convos.php',
                         data: {
                             func: 'sendChat',
                             userId: userId,

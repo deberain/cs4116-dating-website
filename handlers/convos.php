@@ -44,8 +44,16 @@ if(isset($_POST['func']))
         
     }else if($_POST['func'] == "sendChat")
     {
-        if($_POST['userId'] && $_POST['userId']){
+        if($_POST['userId']){
             sendChat();
+        }else{
+            //userId not passed in the request
+            http_response_code(404);
+        }
+    }else if($_POST['func'] == "getProfile")
+    {
+        if($_POST['userId']){
+            getProfile();
         }else{
             //userId not passed in the request
             http_response_code(404);
@@ -89,8 +97,8 @@ function getChats(){
 
                 $rowTwo = mysqli_fetch_assoc($resultTwo);
                 $chatSummary->userName = $rowTwo['display_name'];
-                if(file_exists('../images/' . $chatSummary->userId . '_profile_image.jpg')){
-                    $chatSummary->userProfilePicLocation = './images/' . $chatSummary->userId . '_profile_image.jpg';
+                if(file_exists('../' . $rowTwo['picture'])){
+                    $chatSummary->userProfilePicLocation = './' . $rowTwo['picture'];
                 }else{
                     $chatSummary->userProfilePicLocation = "./images/default_profile_image.png";
                 }
@@ -173,13 +181,13 @@ function getChats(){
     }
 
     mysqli_close($con);
-    echo '<div class="py-5 px-5 display-4 text-light">You haven\'t matched with anyone yet :(</div>';
+    echo '<div id="no-matches-text" class="py-5 px-5 display-4 text-light">You haven\'t matched with anyone yet :(</div>';
     return;
 }
 
 function getChat(){
     include('../config/connection.php'); 
-    $userId = $_POST['userId'];
+    $userId = $_POST['userId'];//not logged in user.
     $loggedInUserId = $_SESSION['user_id'];
     $sql = "SELECT * FROM messages WHERE sender_id = '$userId' AND receiver_id = '$loggedInUserId' OR sender_id = '$loggedInUserId'AND receiver_id = '$userId' ORDER BY date ASC;";
     $result = mysqli_query($con, $sql);  
@@ -187,29 +195,39 @@ function getChat(){
     if ($count < 1){
         return;
     }else{
-        $otherUserProfileImage;
-        $loggedInUserProfileImage;
-        if(file_exists('../images/' . $userId . '_profile_image.jpg')){
-            $otherUserProfileImage = './images/' . $userId . '_profile_image.jpg';
+        //sql query to get profile image locations
+        $sqlTwo = "SELECT * FROM profiles WHERE user_id = '$userId';";
+        $resultTwo = mysqli_query($con, $sqlTwo);  
+        $rowTwo = mysqli_fetch_assoc($resultTwo);
+        $otherUserProfileImage = $rowTwo['picture'];
+
+        $sqlThree = "SELECT * FROM profiles WHERE user_id = '$loggedInUserId';";
+        $resultThree = mysqli_query($con, $sqlThree);  
+        $rowThree = mysqli_fetch_assoc($resultThree);
+        $loggedInUserProfileImage = $rowThree['picture'];
+        
+        
+        if(file_exists('../' . $otherUserProfileImage)){
+            $otherUserProfileImage = './' . $otherUserProfileImage;
         }else{
             $otherUserProfileImage = "./images/default_profile_image.png";
         }
 
-        if(file_exists('../images/' . $loggedInUserId . '_profile_image.jpg')){
-            $loggedInUserProfileImage = './images/' . $loggedInUserId . '_profile_image.jpg';
+        if(file_exists('../' . $loggedInUserProfileImage)){
+            $loggedInUserProfileImage = './' . $loggedInUserProfileImage;
         }else{
             $loggedInUserProfileImage = "./images/default_profile_image.png";
         }
 
         while($row = mysqli_fetch_assoc($result)) {
             if ($row['sender_id']==$loggedInUserId){
-                echo '<div class="message-sent">
+                echo '<div class="message-sent" style="max-width:100%">
                         <img src="' . $loggedInUserProfileImage .'" alt="Avatar" class="right">
                         <p>' . $row['message_content'] .'</p>
                         <span class="time-left">' . $row['date'] .'</span>
                     </div>';
             }else{
-                echo '<div class="message-received">
+                echo '<div class="message-received" style="max-width:100%">
                         <img src="' . $otherUserProfileImage .'" alt="Avatar">
                         <p>' . $row['message_content'] .'</p>
                         <span class="time-right">' . $row['date'] .'</span>
@@ -237,4 +255,39 @@ function sendChat(){
     mysqli_close($con);
     return;
 }
+
+
+function getProfile(){
+    include('../config/connection.php'); 
+    $otherUserId = $_POST['userId'];
+
+    //get users name, location, bio, sex, picture & return in formatted HTML
+    $sql = "SELECT * FROM profiles WHERE user_id = '$otherUserId'";
+    $result = mysqli_query($con, $sql); 
+    $row = mysqli_fetch_assoc($result);
+    $otherUserProfileImage = '';
+    if(file_exists('../' . $row['picture'])){
+        $otherUserProfileImage = './' . $row['picture'];
+    }else{
+        $otherUserProfileImage = "./images/default_profile_image.png";
+    }
+
+    echo '<div class="card m-2">
+    <img class="p-2" src="' . $otherUserProfileImage . '" style="width:100%">
+    <h3 class="p-2">' . $row['display_name'] . ' | ' . $row['sex'] . ' | ' . $row['location'] .'</h1>
+    <p class="p-2">' . $row['bio']. '</p>';
+
+ 
+       /*NEED TO ADD DB COLUMN FOR A USERS INTERESTS
+        
+    <h4 class="p-2">Interests</h3>'
+        <ul><li>Running</li>
+        <li>Music</li>
+        <li>Art</li></ul>*/
+
+    echo '</div>';
+    return;
+}
+
+
 ?>

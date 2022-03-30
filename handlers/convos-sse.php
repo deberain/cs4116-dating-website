@@ -17,7 +17,7 @@ if($userNotLoggedIn) {
 	exit();
 }
 
-
+sleep(2);
 
 $heartbeatCountdown = 5;
 while(1) {
@@ -84,8 +84,8 @@ function checkForUpdates($userId, $lastMatchId, $lastMessageId){
 			}else{
 				$rowTwo = mysqli_fetch_assoc($resultTwo);
 				$otherUserProfileImgLocation = "./images/default_profile_image.png";
-				if(file_exists('../images/' . $rowTwo['user_id'] . '_profile_image.jpg')){
-                    $otherUserProfileImgLocation = './images/' . $rowTwo['user_id'] . '_profile_image.jpg';
+				if(file_exists('../' . $rowTwo['picture'])){
+                    $otherUserProfileImgLocation = './' . $rowTwo['picture'];
                 }
 
 				$newMatches[] = array('match_id' => $row['match_id'], 'chatSummary' => '<div user_id="' . $otherUserId . '" style="cursor: pointer;" class="chat-thumb">
@@ -118,14 +118,31 @@ function checkForUpdates($userId, $lastMatchId, $lastMessageId){
             }else{
                 $otherUserId = $row['sender_id'];
             }
-			$otherUserProfileImage = "./images/default_profile_image.png";
-			$loggedInUserProfileImage = "./images/default_profile_image.png";
-			if(file_exists('../images/' . $otherUserId . '_profile_image.jpg')){
-				$otherUserProfileImage = './images/' . $userId . '_profile_image.jpg';
+
+			//sql query to get profile image locations
+			$sqlFive = "SELECT * FROM profiles WHERE user_id = '$otherUserId';";
+			$resultFive = mysqli_query($con, $sqlFive);  
+			$rowFive = mysqli_fetch_assoc($resultFive);
+			$otherUserProfileImage = $rowFive['picture'];
+	
+			$sqlSix = "SELECT * FROM profiles WHERE user_id = '$userId';";
+			$resultSix = mysqli_query($con, $sqlSix);  
+			$rowSix = mysqli_fetch_assoc($resultSix);
+			$loggedInUserProfileImage = $rowSix['picture'];
+			
+			
+			if(file_exists('../' . $otherUserProfileImage)){
+				$otherUserProfileImage = './' . $otherUserProfileImage;
+			}else{
+				$otherUserProfileImage = "./images/default_profile_image.png";
 			}
-			if(file_exists('../images/' . $userId . '_profile_image.jpg')){
-				$loggedInUserProfileImage = './images/' . $userId . '_profile_image.jpg';
+	
+			if(file_exists('../' . $loggedInUserProfileImage)){
+				$loggedInUserProfileImage = './' . $loggedInUserProfileImage;
+			}else{
+				$loggedInUserProfileImage = "./images/default_profile_image.png";
 			}
+
 			$matchContentLastMessageTxt = null;
 			if ($row['sender_id']===$userId){
                 $messageContent = '<div class="message-sent">
@@ -157,8 +174,8 @@ function checkForUpdates($userId, $lastMatchId, $lastMessageId){
 				}
 
 				$otherUserImg = "./images/default_profile_image.png";
-				if(file_exists('../images/' . $rowTwo['user_id'] . '_profile_image.jpg')){
-					$otherUserImg = './images/' . $rowTwo['user_id'] . '_profile_image.jpg';
+				if(file_exists('../' . $rowTwo['picture'])){
+					$otherUserImg = './' . $rowTwo['picture'];
 				}
 
 				$matchContent = '<div user_id="' . $rowTwo['user_id'] . '" style="cursor: pointer;" class="chat-thumb">
