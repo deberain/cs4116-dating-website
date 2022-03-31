@@ -109,7 +109,7 @@ if (!isset($_SESSION['userReg'])) {
                 <div class="form-row justify-content-around mb-2">
                     <div class="col-10">
                         <label for="SelectInterests" class="mb-0"></label>Your Interests:</label>
-                        <select class="selectpicker" id="SelectInterests" multiple data-live-search="true" name="interests">
+                        <select class="selectpicker" id="SelectInterests" multiple data-live-search="true" name="interests[]">
 
                         </select>
                     </div>
@@ -146,7 +146,7 @@ if (!isset($_SESSION['userReg'])) {
                     var opt = interestsList[i];
                     var el = document.createElement("option");
                     el.textContent = opt["interest_name"];
-                    el.value = opt["interest_name"];
+                    el.value = opt["interest_id"];
                     select.appendChild(el);
                 }
             });
