@@ -35,7 +35,7 @@ if (!isset($_SESSION['userReg'])) {
 
                 <div class="form-row justify-content-around mb-2">
                     <div class="edit-profile-image">
-                        <img class="profile-image" id="editCurrentUserPic" src="images/default_profile_image.png" alt="profile image"> <br />
+                        <img class="profile-image" id="editCurrentUserPic" src="assets/default_profile_image.png" alt="profile image"> <br />
                         <input type="file" accept="image/*" id="uploadProfileImage" name="image" value="Upload Image">
                     </div>
                 </div>
