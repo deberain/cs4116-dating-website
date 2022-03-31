@@ -118,7 +118,7 @@ if (!isset($_SESSION['userReg'])) {
 
                 <div class="form-group mt-4 mb-2">
                     <label for="InputBio">Tell us about yourself!</label>
-                    <textarea class="form-control" id="InputBio" rows="4" name="bio"></textarea>
+                    <textarea class="form-control" id="InputBio" rows="4" name="bio" maxlength="100"></textarea>
                 </div>
                 <br>
                 <input type="submit" class="btn btn-purple px-3" id="reg" value="Submit"/>

@@ -281,6 +281,15 @@ if (isset($_POST['logout'])) {
                     username.innerHTML = profile["display_name"];
                     cardbody.appendChild(username);
 
+                    var space = document.createElement("p");
+                    cardbody.appendChild(space);
+
+                    var gender = document.createElement("h6");
+                    gender.className = "card-title";
+                    gender.innerHTML = profile["sex"];
+                    gender.style = "font-size:15px";
+		            cardbody.appendChild(gender);
+
                     var agelocation = document.createElement("p");
                     agelocation.className = "card-text age-location";
 
@@ -292,6 +301,9 @@ if (isset($_POST['logout'])) {
 
                     agelocation.innerHTML = age.toString() + " - " + profile["location"];
                     cardbody.appendChild(agelocation);
+
+                    var line = document.createElement("hr");
+                    cardbody.appendChild(line);
 
                     var bio = document.createElement("p");
                     bio.className = "card-text";
