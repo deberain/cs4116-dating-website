@@ -22,14 +22,16 @@ if (isset($_POST['logout'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cupid.com | Edit Profile</title>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300&display=swap" rel="stylesheet">
-
-    <script defer src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -98,10 +100,10 @@ if (isset($_POST['logout'])) {
             <div class="edit-profile-options">
                 <h2><u>Edit Profile</u></h2>
 
-                <form name="form" method="post" action="upload.php" enctype="multipart/form-data">
+                <form name="editForm" id="editForm" method="post" action="config/edit_profile.php" enctype="multipart/form-data">
                     <div class="edit-profile-image">
                         <img class="profile-image" id="editCurrentUserPic" src="assets/default_profile_image.png" alt="profile image"> <br />
-                        <input type="file" accept="image/*" id="uploadProfileImage" name="chosenProfileImage" value="Upload Image">
+                        <input type="file" accept="image/*" id="uploadProfileImage" name="image" value="Upload Image">
                     </div>
                     <div class="edit-profile-display-name">
                         <label for="EditDisplayName" class="mb-0">Display Name:</label>
@@ -154,11 +156,19 @@ if (isset($_POST['logout'])) {
                     </div>
                     <div class="edit-profile-pref-sex">
                         <label for="EditPrefSex" class="mb-0">Preferred Sex:</label>
-                        <select class="form-control text-small" id="EditPrefSex" name="sex">
+                        <select class="form-control text-small" id="EditPrefSex" name="pref">
                             <option>Male</option>
                             <option>Female</option>
                             <option>Both</option>
                         </select>
+                    </div>
+                    <div class="form-row justify-content-around mb-2">
+                        <div class="col-10">
+                            <label for="SelectInterests" class="mb-0"></label>Your Interests:</label>
+                            <select class="selectpicker" id="SelectInterests" multiple data-live-search="true" name="interests">
+
+                            </select>
+                        </div>
                     </div>
                     <div class="edit-profile-bio">
                         <label for="EditBio">Bio:</label>
@@ -166,7 +176,7 @@ if (isset($_POST['logout'])) {
                     </div>
 
                     <br>
-                    <button type="button" class="btn btn-purple px-3" id="Save">Save Changes</button>
+                    <input type="submit" class="btn btn-purple px-3" id="reg" value="Save Changes" />
                 </form>
             </div>
 
@@ -187,6 +197,25 @@ if (isset($_POST['logout'])) {
                 }).done(function() {
                     window.location = 'index.php';
                 })
+            });
+
+            $.ajax({
+                type: "GET",
+                url: "config/get_interests.php",
+                async: false
+            }).done(function(res) {
+                console.log(res);
+                interestsList = JSON.parse(res);
+
+                const select = document.getElementById("SelectInterests");
+
+                for (var i = 0; i < interestsList.length; i++) {
+                    var opt = interestsList[i];
+                    var el = document.createElement("option");
+                    el.textContent = opt["interest_name"];
+                    el.value = opt["interest_name"];
+                    select.appendChild(el);
+                }
             });
 
             var currentUserPic = <?php echo json_encode($_SESSION['photo']); ?>;
@@ -258,6 +287,66 @@ if (isset($_POST['logout'])) {
             var age = Math.abs(ageDate.getUTCFullYear() - 1970);
 
             document.getElementById("age-location").innerHTML = age.toString() + " - " + userLocation.toString();
+
+            // submit profile details
+            $("#editForm").on('submit', function(e) {
+                e.preventDefault();
+
+                var displayName = $("#InputFullName").val();
+                var sex = $("#SelectSex").val();
+                var pref = $("#SelectPrefSex").val();
+                var location = $("#InputLocation").val();
+                var bio = $("#InputBio").val();
+
+                var chosenInterests = $('.selectpicker').val();
+                console.log(chosenInterests);
+
+
+                if (displayName === "") {
+                    alert("Please enter your desired display name.");
+                    return false;
+                }
+
+                if (location === "Choose...") {
+                    alert("Please enter your location.");
+                    return false;
+                }
+
+                if (sex === "Choose...") {
+                    alert("Please enter your sex.");
+                    return false;
+                }
+
+                if (pref === "Choose...") {
+                    alert("Please enter your sexual preference.");
+                    return false;
+                }
+
+                
+                if(chosenInterests.length === 0) {
+                    alert("Please select your interests");
+                    return false;
+                } 
+
+                $.ajax({
+                    type: "POST",
+                    url: "config/edit_profile.php",
+                    data: new FormData(this),
+                    contentType: false,
+                    cache: false,
+                    processData: false
+                }).done(function(res) {
+                    var result = String(res).trim();
+                    console.log(result);
+                    if (result === "Success!") {
+                        document.location.href = "edit.php";
+                    } else {
+                        alert("An error ahs occurred");
+                    }
+
+                });
+
+            });
 
         });
     </script>
