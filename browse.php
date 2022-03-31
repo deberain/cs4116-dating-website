@@ -288,7 +288,7 @@ if (isset($_POST['logout'])) {
                     gender.className = "card-title";
                     gender.innerHTML = profile["sex"];
                     gender.style = "font-size:15px";
-		            cardbody.appendChild(gender);
+                    cardbody.appendChild(gender);
 
                     var agelocation = document.createElement("p");
                     agelocation.className = "card-text age-location";
@@ -317,8 +317,71 @@ if (isset($_POST['logout'])) {
 
                     var likebutton = document.createElement("a");
                     likebutton.setAttribute("href", "#");
-                    likebutton.className = "btn btn-primary profile-card-btns-decline";
-                    likebutton.innerHTML = "Like";
+
+                    $.ajax({
+                        method: 'POST',
+                        url: 'config/is_user_liked.php',
+                        data: {
+                            target_id: profile["user_id"]
+                        },
+                        async: false
+                    }).done(function(res) {
+                        var result = String(res).trim();
+                        if (result === "true") {
+                            likebutton.className = "btn btn-secondary profile-card-btns-decline";
+                            likebutton.innerHTML = "Undo";
+                        } else {
+                            likebutton.className = "btn btn-primary profile-card-btns-decline";
+                            likebutton.innerHTML = "Like";
+                        }
+                    });
+
+                    likebutton.id = "like" + profile["user_id"];
+                    likebutton.onclick = function(event) {
+
+                        var buttonPressed = document.getElementById(this.id);
+                        var target = this.id.substring(4);
+
+                        if (buttonPressed.innerHTML === "Undo") {
+                            $.ajax({
+                                type: "POST",
+                                url: "config/unlike_user.php",
+                                data: {
+                                    target_id: target
+                                },
+                                async: true
+                            }).done(function(res) {
+                                var result = String(res).trim();
+                                if (result === "Success!") {
+                                    console.log("disliked user id " + target);
+                                    buttonPressed.className = "btn btn-primary profile-card-btns-decline";
+                                    buttonPressed.innerHTML = "Like";
+                                } else {
+                                    alert("An error has occurred");
+                                }
+                            });
+                        } else {
+                            $.ajax({
+                                type: "POST",
+                                url: "config/Like_user.php",
+                                data: {
+                                    target_id: target
+                                },
+                                async: true
+                            }).done(function(res) {
+                                var result = String(res).trim();
+                                if (result === "Success!") {
+                                    console.log("Liked user id " + target);
+                                    buttonPressed.className = "btn btn-secondary profile-card-btns-decline";
+                                    buttonPressed.innerHTML = "Undo";
+                                } else if (result === "Already Liked User") {
+                                    alert("You have already liked this user");
+                                } else {
+                                    alert("An error has occurred");
+                                }
+                            });
+                        }
+                    }
                     cardbuttons.appendChild(likebutton);
 
 

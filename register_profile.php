@@ -213,7 +213,7 @@ if (!isset($_SESSION['userReg'])) {
                       if(result === "Success!") {
                         document.location.href="home.php";
                       } else {
-                        alert("An error ahs occurred");
+                        alert("An error has occurred");
                       }
                       
                   });
