@@ -165,7 +165,7 @@ if (isset($_POST['logout'])) {
                     <div class="form-row justify-content-around mb-2">
                         <div class="col-10">
                             <label for="SelectInterests" class="mb-0"></label>Your Interests:</label>
-                            <select class="selectpicker" id="SelectInterests" multiple data-live-search="true" name="interests">
+                            <select class="selectpicker" id="SelectInterests" multiple data-live-search="true" name="interests[]">
 
                             </select>
                         </div>
@@ -213,7 +213,7 @@ if (isset($_POST['logout'])) {
                     var opt = interestsList[i];
                     var el = document.createElement("option");
                     el.textContent = opt["interest_name"];
-                    el.value = opt["interest_name"];
+                    el.value = opt["interest_id"];
                     select.appendChild(el);
                 }
             });
@@ -287,6 +287,17 @@ if (isset($_POST['logout'])) {
             var age = Math.abs(ageDate.getUTCFullYear() - 1970);
 
             document.getElementById("age-location").innerHTML = age.toString() + " - " + userLocation.toString();
+
+            var userInterests = <?php echo json_encode($_SESSION['interests']); ?>;
+            console.log(userInterests);
+
+            Array.from(document.querySelector("#SelectInterests").options).forEach(function(option) {
+                for(let i = 0; i < userInterests.length; i++) {
+                    if(option.value === userInterests[i]) {
+                        option.selected = true;
+                    }
+                }
+            });
 
             // submit profile details
             $("#editForm").on('submit', function(e) {

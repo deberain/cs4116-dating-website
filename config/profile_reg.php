@@ -53,6 +53,7 @@ if (!empty($_POST['display_name']) || !empty($_POST['location']) || !empty($_POS
                 $_SESSION['sex'] = $sex;
                 $_SESSION['pref'] = $pref;
                 $_SESSION['bio'] = $bio;
+                $_SESSION['interests'] = $interests;
                 $_SESSION['photo'] = $dbpath;
                 exit('Success!');
             } else {

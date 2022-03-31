@@ -41,6 +41,17 @@
                 $_SESSION['pref'] = $row['preferred_sex'];
                 $_SESSION['bio'] = $row['bio'];
                 $_SESSION['photo'] = $row['picture'];
+
+                $sql = "select interest_id from `user_interests` where user_id = '$userId'";  
+                $result = mysqli_query($con, $sql);
+                $data = array();
+
+                while ($row = mysqli_fetch_assoc($result))
+                {
+                    $data[] = $row['interest_id'];
+                }
+
+                $_SESSION['interests'] = $data;
                   
                 exit("Login Successful");  
             }  
