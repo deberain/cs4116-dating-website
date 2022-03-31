@@ -31,10 +31,22 @@ if (!empty($_POST['display_name']) || !empty($_POST['location']) || !empty($_POS
             $interests = $_POST['interests'];
             //include database configuration file
             include_once 'connection.php';
-            //insert form data in the database
-            $sql = "INSERT INTO `profiles` (`user_id`, `display_name`,`sex`, `preferred_sex`, `location`, `bio`, `picture`) VALUES ('$user_id', '$display_name', '$sex', '$pref', '$location', '$bio', '$dbpath')";
+            //insert form data in the database (user_interests table)
+            $valuesToInsert = "";
+            for($i=0; $i<count($interests); $i++){
+                $appendSeparator = ",";
+                if(count($interests)-1===$i){
+                    $appendSeparator = ";";
+                }
+                $valuesToInsert .= "('$user_id', '".strval($interests[$i])."')".$appendSeparator;
+            }
+            $sqlInterests = "INSERT INTO `user_interests` (`user_id`, `interest_id`) VALUES ". $valuesToInsert;
+            
 
-            if ($con->query($sql) === TRUE) {
+            //insert form data in the database (profiles table)
+            $sql = "INSERT INTO `profiles` (`user_id`, `display_name`,`sex`, `preferred_sex`, `location`, `bio`, `picture`) VALUES ('$user_id', '$display_name', '$sex', '$pref', '$location', '$bio', '$dbpath');";
+            $sql .= $sqlInterests;
+            if ($con->multi_query($sql) === TRUE) {
                 $_SESSION['LoggedIn'] = '1';
                 $_SESSION['display_name'] = $display_name;
                 $_SESSION['location'] = $location;

@@ -275,17 +275,17 @@ function getProfile(){
     echo '<div class="card m-2">
     <img class="p-2" src="' . $otherUserProfileImage . '" style="width:100%">
     <h3 class="p-2">' . $row['display_name'] . ' | ' . $row['sex'] . ' | ' . $row['location'] .'</h1>
-    <p class="p-2">' . $row['bio']. '</p>';
+    <p class="p-2">' . $row['bio']. '</p>
+    <h4 class="p-2">Interests</h3><ul>';
 
- 
-       /*NEED TO ADD DB COLUMN FOR A USERS INTERESTS
-        
-    <h4 class="p-2">Interests</h3>'
-        <ul><li>Running</li>
-        <li>Music</li>
-        <li>Art</li></ul>*/
+    $sqlTwo = "SELECT * FROM user_interests INNER JOIN interests ON user_interests.interest_id = interests.interest_id WHERE user_id = '$otherUserId'";
+    $resultTwo = mysqli_query($con, $sqlTwo);
+    while($rowTwo = mysqli_fetch_assoc($resultTwo)) {
+        echo '<li>' . $rowTwo['interest_name'] . '</li>';
+    }
+    
 
-    echo '</div>';
+    echo '</ul></div>';
     return;
 }
 
