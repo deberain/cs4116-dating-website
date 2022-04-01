@@ -248,6 +248,33 @@ if (isset($_POST['logout'])) {
 
             console.log(profiles);
 
+            //FILTER PROFILES TO REMOVE ALREADY MATCHED USERS
+
+            var userMatches = [];
+
+            $.ajax({
+                type: "GET",
+                url: "config/get_user_matches.php",
+                async: false
+            }).done(function(res) {
+                userMatches = JSON.parse(res);
+
+                console.log(userMatches);
+            });
+
+            var excludeIDs = [];
+
+            const currentUserID = <?php echo json_encode($_SESSION["user_id"]); ?>;
+            console.log(currentUserID);
+
+            userMatches.forEach(function(match) {
+                if(match["user_one_id"] === currentUserID) {
+                    excludeIDs.push(match["user_two_id"]);
+                } else {
+                    excludeIDs.push(match["user_one_id"]);
+                }
+            });
+
             $.ajax({
                 type: "GET",
                 url: "config/get_ages.php",
@@ -261,6 +288,10 @@ if (isset($_POST['logout'])) {
 
                 for (var i = 0; i < profiles.length; i++) {
                     var profile = profiles[i];
+
+                    if(excludeIDs.includes(profile["user_id"])) {
+                        continue;
+                    }
 
                     var card = document.createElement("div");
                     card.className = "card card-block mx-2 profile-card";
