@@ -248,8 +248,6 @@ if (isset($_POST['logout'])) {
 
             console.log(profiles);
 
-            console.log(profiles.length);
-
             $.ajax({
                 type: "GET",
                 url: "config/get_ages.php",

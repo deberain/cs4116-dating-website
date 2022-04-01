@@ -71,7 +71,7 @@ body, html {
     height: 80px;
   }
 
-  .profile-card-btns-acccept {
+  .profile-card-btns-accept {
     grid-column: 2;
   }
 
@@ -109,6 +109,10 @@ body, html {
   .profile-card-bio {
     height: 150px;
     overflow-y: auto;
+  }
+
+  .no-pending {
+    font-size: 1.5em;
   }
 
   .suggested-users {
