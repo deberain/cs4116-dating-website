@@ -103,14 +103,14 @@ if (isset($_POST['logout'])) {
             </div>
             <div class="send-message-area d-none">
                 <div class="container">
-                    <div class="row">
-                        <div class="col-10">
-                            <div class="form-group purple-border">
+                    <div class="row justify-content-center">
+                        <div class="col-7">
+                            <div class="form-group white-border">
                                 <textarea class="form-control" id="message-box" rows="3"></textarea>
                             </div>
                         </div>
                         <div class="col-2">
-                            <button user_id="" id="sendButton" class="btn btn-purple ml-3 mt-4">Send</button>
+                            <button user_id="" id="sendButton" class="btn btn-white ml-3 mt-4">Send</button>
                         </div>
                     </div>
                 </div>
