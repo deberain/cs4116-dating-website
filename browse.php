@@ -315,6 +315,12 @@ if (isset($_POST['logout'])) {
                 aOptions.style.display = "block";
             } else {
                 aOptions.style.display = "none";
+
+                clearUsersContainer();
+
+                filterProfiles();
+
+                createProfileCards();
             }
         }
 
@@ -326,6 +332,12 @@ if (isset($_POST['logout'])) {
                 dOptions.style.display = "block";
             } else {
                 dOptions.style.display = "none";
+
+                clearUsersContainer();
+
+                filterProfiles();
+
+                createProfileCards();
             }
         }
 
