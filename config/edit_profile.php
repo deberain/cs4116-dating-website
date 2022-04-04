@@ -4,7 +4,7 @@ session_start();
 include('connection.php');
 $user_id = $_SESSION['user_id'];
 
-$valid_extensions = array('jpeg', 'jpg', 'png', 'gif', 'bmp', 'pdf', 'doc', 'ppt');
+$valid_extensions = array('jpeg', 'jpg', 'png', 'gif', 'bmp', 'pdf', 'doc', 'ppt', 'jfif');
 $path = '../images/'; // upload directory
 
 if (!empty($_FILES['image'])) {
