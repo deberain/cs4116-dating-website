@@ -182,14 +182,18 @@ body, html {
 
   .chat-body {
     grid-column: 2;
+    max-width: calc(100vw - 619px);
   }
 
   .messages{
-    background-color: white;
+    background-color: #202731;
     height: 75vh;
-    overflow: scroll;
-  }
+    overflow-y: auto;
+    width: 100%;
+    border-bottom: 3px dotted #FFF;
 
+  }
+  
   .send-message-area{
     height:16vh;
   }
@@ -197,6 +201,7 @@ body, html {
   .chat-profile {
     grid-column: 3;
     background-color: #343a40;
+    overflow-y: scroll;
   }
 
   .chat-thumb {
@@ -235,7 +240,8 @@ body, html {
   }
 
   .message-received {
-    height: 83px;
+    min-height: 85px;
+    max-width: 95%;
     border: 2px solid #dedede;
     background-color: #f1f1f1;
     border-radius: 5px;
@@ -262,7 +268,8 @@ body, html {
   }
 
   .message-sent {
-    height: 83px;
+    min-height: 85px;
+    max-width: 95%;
     border: 2px solid #dedede;
     background-color: #ddd;;
     border-radius: 5px;
@@ -285,20 +292,25 @@ body, html {
     border-radius: 50%;
   }
 
-  .purple-border textarea {
-    border: 3px solid rgb(252,8,255);;
+  .white-border textarea {
+    border: 3px solid #FFF;
     margin: 10px;
     padding: 0px;
+    background-color: #202731;
+    color: #FFF;
   }
 
-  .purple-border .form-control:focus {
-    border: 3px solid rgb(252,8,255);;
-    box-shadow: 0 0 0 0.2rem rgb(252,8,255, 0.25);;
+  .white-border .form-control:focus {
+    border: 3px solid rgb(255, 255, 255);;
+    box-shadow: 0 0 0 0.2rem rgb(252,255,255, 0.50);
+    background-color: #202731;
+    color: #FFF;
   }
 
-  .btn-purple {
-    background-color: rgb(252,8,255);
-    color: #ffffff;
+  .btn-white {
+    background-color: #FFF;
+    color: #202731;
+    font-weight: bold;
   }
 
 .text-small{
@@ -362,4 +374,45 @@ body, html {
 .edit-profile-bio {
   width: 400px;
   margin-bottom: 10px;
+}
+
+.matched-user-card{
+  background-color:#202731; 
+  color: #FFF; 
+  border: 3px solid #FFF;
+}
+
+@media only screen and (max-width: 1205px) {
+
+  .chat-body{
+    max-width: calc(100vw - 320px);
+  }
+
+  .messages{
+    width: 100%;
+  }
+
+  .chat-profile{
+    visibility: hidden;
+    overflow-y: hidden;
+  }
+
+  .chats-grid-container {
+    grid-template-columns: 300px auto 0px;
+  }
+
+}
+
+@media only screen and (max-width: 725px) {
+  .chats-grid-container {
+    grid-template-columns: 200px auto 0px;
+  }
+
+  .chat-body{
+    max-width: calc(100vw - 220px);
+  }
+
+  .messages{
+    width: 100%;
+  }
 }

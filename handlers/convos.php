@@ -221,15 +221,15 @@ function getChat(){
 
         while($row = mysqli_fetch_assoc($result)) {
             if ($row['sender_id']==$loggedInUserId){
-                echo '<div class="message-sent" style="max-width:100%">
+                echo '<div class="message-sent pb-5">
                         <img src="' . $loggedInUserProfileImage .'" alt="Avatar" class="right">
-                        <p>' . $row['message_content'] .'</p>
+                        <p style="word-break:break-all;">' . $row['message_content'] .'</p>
                         <span class="time-left">' . $row['date'] .'</span>
                     </div>';
             }else{
-                echo '<div class="message-received" style="max-width:100%">
+                echo '<div class="message-received pb-5">
                         <img src="' . $otherUserProfileImage .'" alt="Avatar">
-                        <p>' . $row['message_content'] .'</p>
+                        <p style="word-break:break-all;">' . $row['message_content'] .'</p>
                         <span class="time-right">' . $row['date'] .'</span>
                     </div>';
             }
@@ -272,7 +272,7 @@ function getProfile(){
         $otherUserProfileImage = "./images/default_profile_image.png";
     }
 
-    echo '<div class="card m-2">
+    echo '<div class="card m-2 matched-user-card" >
     <img class="p-2" src="' . $otherUserProfileImage . '" style="width:100%">
     <h3 class="p-2">' . $row['display_name'] . ' | ' . $row['sex'] . ' | ' . $row['location'] .'</h1>
     <p class="p-2">' . $row['bio']. '</p>

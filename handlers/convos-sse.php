@@ -145,16 +145,16 @@ function checkForUpdates($userId, $lastMatchId, $lastMessageId){
 
 			$matchContentLastMessageTxt = null;
 			if ($row['sender_id']===$userId){
-                $messageContent = '<div class="message-sent">
+                $messageContent = '<div class="message-sent pb-5">
                         <img src="' . $loggedInUserProfileImage .'" alt="Avatar" class="right">
-                        <p>' . $row['message_content'] .'</p>
+                        <p style="word-break:break-all;">' . $row['message_content'] .'</p>
                         <span class="time-left">' . $row['date'] .'</span>
                     </div>';
 					$matchContentLastMessageTxt = 'You: ' . $row['message_content'];
             }else{
-                $messageContent = '<div class="message-received">
+                $messageContent = '<div class="message-received pb-5">
                         <img src="' . $otherUserProfileImage .'" alt="Avatar">
-                        <p>' . $row['message_content'] .'</p>
+                        <p style="word-break:break-all;">' . $row['message_content'] .'</p>
                         <span class="time-right">' . $row['date'] .'</span>
                     </div>';
 					
