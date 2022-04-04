@@ -265,7 +265,8 @@ if (isset($_POST['logout'])) {
             var excludeIDs = [];
 
             const currentUserID = <?php echo json_encode($_SESSION["user_id"]); ?>;
-            console.log(currentUserID);
+
+            const currentUserPref = <?php echo json_encode($_SESSION["pref"]); ?>;
 
             userMatches.forEach(function(match) {
                 if(match["user_one_id"] === currentUserID) {
@@ -291,6 +292,14 @@ if (isset($_POST['logout'])) {
 
                     if(excludeIDs.includes(profile["user_id"])) {
                         continue;
+                    }
+
+                    if(currentUserPref !== "Both") {
+                        if(currentUserPref === "Male" && profile["sex"] === "Female") {
+                            continue;
+                        } else if(currentUserPref === "Female" && profile["sex"] === "Male") {
+                            continue;
+                        }
                     }
 
                     var card = document.createElement("div");
