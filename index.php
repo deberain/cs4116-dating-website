@@ -37,7 +37,7 @@
 
                 $_SESSION['display_name'] = $row['display_name'];
                 $_SESSION['location'] = $row['location'];
-                $_SESSION['sex'] = $row['Male'];
+                $_SESSION['sex'] = $row['sex'];
                 $_SESSION['pref'] = $row['preferred_sex'];
                 $_SESSION['bio'] = $row['bio'];
                 $_SESSION['photo'] = $row['picture'];
