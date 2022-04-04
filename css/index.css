@@ -17,7 +17,7 @@ body, html {
 .welcome-container {
   background: rgb(252,8,255);
   background: linear-gradient(90deg, rgba(252,8,255,1) 0%, rgba(128,0,255,1) 100%); 
-  padding: 100px 10vw 200px;
+  padding: 100px 10vw 100px;
   display: grid;
   grid-template-columns: auto 600px;
   align-content: center;
