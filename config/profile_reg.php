@@ -29,6 +29,10 @@ if (!empty($_POST['display_name']) || !empty($_POST['location']) || !empty($_POS
             $pref = $_POST['pref'];
             $bio = $_POST['bio'];
             $interests = $_POST['interests'];
+
+            $display_name = mysqli_real_escape_string($con, $display_name);
+            $bio = mysqli_real_escape_string($con, $bio);
+
             //include database configuration file
             include_once 'connection.php';
             //insert form data in the database (user_interests table)

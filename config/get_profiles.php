@@ -12,6 +12,8 @@
 
     while ($row = mysqli_fetch_assoc($result))
     {
+        $row["display_name"] = stripcslashes($row["display_name"]);
+        $row["bio"] = stripcslashes($row["bio"]);
         $data[] = $row;
     }
 

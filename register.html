@@ -53,7 +53,15 @@
               var username = $("#InputUsername").val();
               var password = $("#InputPassword").val();
               var confirmedPassword = $("#ConfirmPassword").val();
-              var DOB = $("#InputBirthDate").val();
+
+              const DOBInput = document.getElementById("InputBirthDate");
+
+              if(!DOBInput.value) {
+                alert("Please enter your date of birth");
+                return false;
+              } 
+
+              var DOB = DOBInput.value;
 
               var dateOfBirth = new Date(DOB);
 

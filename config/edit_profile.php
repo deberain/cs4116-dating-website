@@ -36,6 +36,9 @@ if (!empty($_POST['display_name']) || !empty($_POST['location']) || !empty($_POS
     $pref = $_POST['pref'];
     $bio = $_POST['bio'];
     $interests = $_POST['interests'];
+
+    $display_name = mysqli_real_escape_string($con, $display_name);
+    $bio = mysqli_real_escape_string($con, $bio);
     //include database configuration file
     include_once 'connection.php';
     //Clear interests for user and then insert all new interests
@@ -57,11 +60,11 @@ if (!empty($_POST['display_name']) || !empty($_POST['location']) || !empty($_POS
         $sql = "UPDATE `profiles` SET `display_name` = '$display_name',`sex` = '$sex', `preferred_sex` = '$pref', `location` = '$location', `bio` = '$bio' WHERE `user_id` = '$user_id';";
         $sql .= $sqlInterests;
         if ($con->multi_query($sql) === TRUE) {
-            $_SESSION['display_name'] = $display_name;
+            $_SESSION['display_name'] = stripcslashes($display_name);
             $_SESSION['location'] = $location;
             $_SESSION['sex'] = $sex;
             $_SESSION['pref'] = $pref;
-            $_SESSION['bio'] = $bio;
+            $_SESSION['bio'] = stripcslashes($bio);
             $_SESSION['interests'] = $interests;
             exit('Success!');
         } else {

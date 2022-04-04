@@ -176,7 +176,7 @@ if (isset($_POST['logout'])) {
                     </div>
 
                     <br>
-                    <input type="submit" class="btn btn-purple px-3" id="reg" value="Save Changes" />
+                    <input type="submit" class="btn btn-primary px-3" id="reg" value="Save Changes" />
                 </form>
             </div>
 

@@ -35,11 +35,11 @@ if (isset($_POST['login'])) {
         $result = mysqli_query($con, $sql);
         $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
-        $_SESSION['display_name'] = $row['display_name'];
+        $_SESSION['display_name'] = stripcslashes($row['display_name']);
         $_SESSION['location'] = $row['location'];
         $_SESSION['sex'] = $row['sex'];
         $_SESSION['pref'] = $row['preferred_sex'];
-        $_SESSION['bio'] = $row['bio'];
+        $_SESSION['bio'] = stripcslashes($row['bio']);
         $_SESSION['photo'] = $row['picture'];
 
         $sql = "select interest_id from `user_interests` where user_id = '$userId'";
