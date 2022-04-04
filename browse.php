@@ -198,6 +198,16 @@ if (isset($_POST['logout'])) {
 
 
     <script>
+        var profiles = [];
+        var profilesDisplayed = [];
+        var ages = [];
+        var excludeIDs = [];
+        var userMatches = [];
+
+        const currentUserID = <?php echo json_encode($_SESSION["user_id"]); ?>;
+
+        const currentUserPref = <?php echo json_encode($_SESSION["pref"]); ?>;
+
         $(document).ready(function() {
             $("#Logout").on('click', function() {
                 $.ajax({
@@ -222,6 +232,12 @@ if (isset($_POST['logout'])) {
                 $('#maxAgeFilter').attr({
                     "min": $('#minAgeFilter').val()
                 });
+
+                clearUsersContainer();
+
+                filterProfiles();
+
+                createProfileCards();
             });
 
             $("#maxAgeFilter").on('input', function() {
@@ -230,13 +246,17 @@ if (isset($_POST['logout'])) {
                 $('#minAgeFilter').attr({
                     "max": $('#maxAgeFilter').val()
                 });
+
+                clearUsersContainer();
+
+                filterProfiles();
+
+                createProfileCards();
             });
 
             $("#maxDistance").on('input', function() {
                 $('#maxDistanceVal').html($('#maxDistance').val() + ' km')
             });
-
-            var profiles = [];
 
             $.ajax({
                 type: "GET",
@@ -248,9 +268,6 @@ if (isset($_POST['logout'])) {
 
             console.log(profiles);
 
-            //FILTER PROFILES TO REMOVE ALREADY MATCHED USERS
-
-            var userMatches = [];
 
             $.ajax({
                 type: "GET",
@@ -262,14 +279,8 @@ if (isset($_POST['logout'])) {
                 console.log(userMatches);
             });
 
-            var excludeIDs = [];
-
-            const currentUserID = <?php echo json_encode($_SESSION["user_id"]); ?>;
-
-            const currentUserPref = <?php echo json_encode($_SESSION["pref"]); ?>;
-
             userMatches.forEach(function(match) {
-                if(match["user_one_id"] === currentUserID) {
+                if (match["user_one_id"] === currentUserID) {
                     excludeIDs.push(match["user_two_id"]);
                 } else {
                     excludeIDs.push(match["user_one_id"]);
@@ -281,153 +292,16 @@ if (isset($_POST['logout'])) {
                 url: "config/get_ages.php",
                 async: false
             }).done(function(res) {
-                var ages = JSON.parse(res);
+                ages = JSON.parse(res);
 
                 console.log(ages);
 
-                const usersContainer = document.getElementsByClassName("usersContainer")[0];
+                filterProfiles();
 
-                for (var i = 0; i < profiles.length; i++) {
-                    var profile = profiles[i];
+                createProfileCards();
 
-                    if(excludeIDs.includes(profile["user_id"])) {
-                        continue;
-                    }
-
-                    if(currentUserPref !== "Both") {
-                        if(currentUserPref === "Male" && profile["sex"] === "Female") {
-                            continue;
-                        } else if(currentUserPref === "Female" && profile["sex"] === "Male") {
-                            continue;
-                        }
-                    }
-
-                    var card = document.createElement("div");
-                    card.className = "card card-block mx-2 profile-card";
-
-                    var image = document.createElement("img");
-                    image.className = "card-img-top";
-                    image.setAttribute("src", profile["picture"]);
-                    image.setAttribute("alt", "profile image");
-                    card.appendChild(image);
-
-                    var cardbody = document.createElement("div");
-                    cardbody.className = "card-body";
-
-                    var username = document.createElement("h5");
-                    username.className = "card-title";
-                    username.innerHTML = profile["display_name"];
-                    cardbody.appendChild(username);
-
-                    var space = document.createElement("p");
-                    cardbody.appendChild(space);
-
-                    var gender = document.createElement("h6");
-                    gender.className = "card-title";
-                    gender.innerHTML = profile["sex"];
-                    gender.style = "font-size:15px";
-                    cardbody.appendChild(gender);
-
-                    var agelocation = document.createElement("p");
-                    agelocation.className = "card-text age-location";
-
-                    var userDOB = new Date(ages[i]);
-
-                    var ageDifMs = Date.now() - userDOB;
-                    var ageDate = new Date(ageDifMs);
-                    var age = Math.abs(ageDate.getUTCFullYear() - 1970);
-
-                    agelocation.innerHTML = age.toString() + " - " + profile["location"];
-                    cardbody.appendChild(agelocation);
-
-                    var line = document.createElement("hr");
-                    cardbody.appendChild(line);
-
-                    var bio = document.createElement("p");
-                    bio.className = "card-text";
-                    bio.innerHTML = profile["bio"];
-                    cardbody.appendChild(bio);
-
-                    card.append(cardbody);
-
-                    var cardbuttons = document.createElement("div");
-                    cardbuttons.className = "profile-card-btns";
-
-                    var likebutton = document.createElement("a");
-                    likebutton.setAttribute("href", "#");
-
-                    $.ajax({
-                        method: 'POST',
-                        url: 'config/is_user_liked.php',
-                        data: {
-                            target_id: profile["user_id"]
-                        },
-                        async: false
-                    }).done(function(res) {
-                        var result = String(res).trim();
-                        if (result === "true") {
-                            likebutton.className = "btn btn-secondary profile-card-btns-decline";
-                            likebutton.innerHTML = "Undo";
-                        } else {
-                            likebutton.className = "btn btn-primary profile-card-btns-decline";
-                            likebutton.innerHTML = "Like";
-                        }
-                    });
-
-                    likebutton.id = "like" + profile["user_id"];
-                    likebutton.onclick = function(event) {
-
-                        var buttonPressed = document.getElementById(this.id);
-                        var target = this.id.substring(4);
-
-                        if (buttonPressed.innerHTML === "Undo") {
-                            $.ajax({
-                                type: "POST",
-                                url: "config/unlike_user.php",
-                                data: {
-                                    target_id: target
-                                },
-                                async: true
-                            }).done(function(res) {
-                                var result = String(res).trim();
-                                if (result === "Success!") {
-                                    console.log("disliked user id " + target);
-                                    buttonPressed.className = "btn btn-primary profile-card-btns-decline";
-                                    buttonPressed.innerHTML = "Like";
-                                } else {
-                                    alert("An error has occurred");
-                                }
-                            });
-                        } else {
-                            $.ajax({
-                                type: "POST",
-                                url: "config/Like_user.php",
-                                data: {
-                                    target_id: target
-                                },
-                                async: true
-                            }).done(function(res) {
-                                var result = String(res).trim();
-                                if (result === "Success!") {
-                                    console.log("Liked user id " + target);
-                                    buttonPressed.className = "btn btn-secondary profile-card-btns-decline";
-                                    buttonPressed.innerHTML = "Undo";
-                                } else if (result === "Already Liked User") {
-                                    alert("You have already liked this user");
-                                } else {
-                                    alert("An error has occurred");
-                                }
-                            });
-                        }
-                    }
-                    cardbuttons.appendChild(likebutton);
-
-
-                    card.appendChild(cardbuttons);
-
-
-                    usersContainer.appendChild(card);
-                }
+                console.log("Profiles being displayed: ");
+                console.log(profilesDisplayed);
             });
 
 
@@ -452,6 +326,187 @@ if (isset($_POST['logout'])) {
                 dOptions.style.display = "block";
             } else {
                 dOptions.style.display = "none";
+            }
+        }
+
+        function filterProfiles() {
+            // FILTER PROFILES TO BE DISPLAYED
+            profilesDisplayed = [];
+
+            for (var i = 0; i < profiles.length; i++) {
+                var profile = profiles[i];
+
+                if (profile["age"] === undefined) {
+                    var userDOB = new Date(ages[i]);
+
+                    var ageDifMs = Date.now() - userDOB;
+                    var ageDate = new Date(ageDifMs);
+                    profile["age"] = Math.abs(ageDate.getUTCFullYear() - 1970);
+                }
+
+                if (excludeIDs.includes(profile["user_id"])) {
+                    continue;
+                }
+
+                if (currentUserPref !== "Both") {
+                    if (currentUserPref === "Male" && profile["sex"] === "Female") {
+                        continue;
+                    } else if (currentUserPref === "Female" && profile["sex"] === "Male") {
+                        continue;
+                    }
+                }
+
+                var ageCheckbox = document.getElementById('filterByAge');
+
+
+                if (ageCheckbox.checked) {
+                    var minAge = $('#minAgeFilter').val()
+                    var maxAge = $('#maxAgeFilter').val()
+
+                    var currentAge = profile["age"];
+
+                    if (currentAge < minAge || currentAge > maxAge) {
+                        continue;
+                    }
+                }
+
+                profilesDisplayed.push(profile);
+            }
+        }
+
+        function clearUsersContainer() {
+            const usersContainer = document.getElementsByClassName("usersContainer")[0];
+
+            while (usersContainer.firstChild) {
+                usersContainer.removeChild(usersContainer.lastChild);
+            }
+        }
+
+        function createProfileCards() {
+            const usersContainer = document.getElementsByClassName("usersContainer")[0];
+
+            for (var i = 0; i < profilesDisplayed.length; i++) {
+                var profile = profilesDisplayed[i];
+
+                var card = document.createElement("div");
+                card.className = "card card-block mx-2 profile-card";
+
+                var image = document.createElement("img");
+                image.className = "card-img-top";
+                image.setAttribute("src", profile["picture"]);
+                image.setAttribute("alt", "profile image");
+                card.appendChild(image);
+
+                var cardbody = document.createElement("div");
+                cardbody.className = "card-body";
+
+                var username = document.createElement("h5");
+                username.className = "card-title";
+                username.innerHTML = profile["display_name"];
+                cardbody.appendChild(username);
+
+                var space = document.createElement("p");
+                cardbody.appendChild(space);
+
+                var gender = document.createElement("h6");
+                gender.className = "card-title";
+                gender.innerHTML = profile["sex"];
+                gender.style = "font-size:15px";
+                cardbody.appendChild(gender);
+
+                var agelocation = document.createElement("p");
+                agelocation.className = "card-text age-location";
+
+                agelocation.innerHTML = profile["age"].toString() + " - " + profile["location"];
+                cardbody.appendChild(agelocation);
+
+                var line = document.createElement("hr");
+                cardbody.appendChild(line);
+
+                var bio = document.createElement("p");
+                bio.className = "card-text";
+                bio.innerHTML = profile["bio"];
+                cardbody.appendChild(bio);
+
+                card.append(cardbody);
+
+                var cardbuttons = document.createElement("div");
+                cardbuttons.className = "profile-card-btns";
+
+                var likebutton = document.createElement("a");
+                likebutton.setAttribute("href", "#");
+
+                $.ajax({
+                    method: 'POST',
+                    url: 'config/is_user_liked.php',
+                    data: {
+                        target_id: profile["user_id"]
+                    },
+                    async: false
+                }).done(function(res) {
+                    var result = String(res).trim();
+                    if (result === "true") {
+                        likebutton.className = "btn btn-secondary profile-card-btns-decline";
+                        likebutton.innerHTML = "Undo";
+                    } else {
+                        likebutton.className = "btn btn-primary profile-card-btns-decline";
+                        likebutton.innerHTML = "Like";
+                    }
+                });
+
+                likebutton.id = "like" + profile["user_id"];
+                likebutton.onclick = function(event) {
+
+                    var buttonPressed = document.getElementById(this.id);
+                    var target = this.id.substring(4);
+
+                    if (buttonPressed.innerHTML === "Undo") {
+                        $.ajax({
+                            type: "POST",
+                            url: "config/unlike_user.php",
+                            data: {
+                                target_id: target
+                            },
+                            async: true
+                        }).done(function(res) {
+                            var result = String(res).trim();
+                            if (result === "Success!") {
+                                console.log("disliked user id " + target);
+                                buttonPressed.className = "btn btn-primary profile-card-btns-decline";
+                                buttonPressed.innerHTML = "Like";
+                            } else {
+                                alert("An error has occurred");
+                            }
+                        });
+                    } else {
+                        $.ajax({
+                            type: "POST",
+                            url: "config/Like_user.php",
+                            data: {
+                                target_id: target
+                            },
+                            async: true
+                        }).done(function(res) {
+                            var result = String(res).trim();
+                            if (result === "Success!") {
+                                console.log("Liked user id " + target);
+                                buttonPressed.className = "btn btn-secondary profile-card-btns-decline";
+                                buttonPressed.innerHTML = "Undo";
+                            } else if (result === "Already Liked User") {
+                                alert("You have already liked this user");
+                            } else {
+                                alert("An error has occurred");
+                            }
+                        });
+                    }
+                }
+                cardbuttons.appendChild(likebutton);
+
+
+                card.appendChild(cardbuttons);
+
+
+                usersContainer.appendChild(card);
             }
         }
 
