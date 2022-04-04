@@ -154,7 +154,7 @@ function getChats(){
         foreach ($listOfChatSummarys as $chatSumm) {
             echo '<div user_id="' . $chatSumm->userId . '" style="cursor: pointer;" class="chat-thumb">
                     <div class="chat-thumb-profile-pic-container">
-                        <img class="chat-thumb-profile-pic" src="' . $chatSumm->userProfilePicLocation . '" width="60" height="60" alt="profile image">
+                        <img class="chat-thumb-profile-pic" src="' . $chatSumm->userProfilePicLocation . '" alt="profile image">
                     </div>
                     <div class="chat-preview">
                         <div class="chat-preview-username">
@@ -272,8 +272,8 @@ function getProfile(){
         $otherUserProfileImage = "./images/default_profile_image.png";
     }
 
-    echo '<div class="card m-2 matched-user-card" >
-    <img class="p-2" src="' . $otherUserProfileImage . '" style="width:100%">
+    echo '<div class="card matched-user-card" >
+    <img class="profile-img" src="' . $otherUserProfileImage . '">
     <h3 class="p-2">' . $row['display_name'] . ' | ' . $row['sex'] . ' | ' . $row['location'] .'</h1>
     <p class="p-2">' . $row['bio']. '</p>
     <h4 class="p-2">Interests</h3><ul>';

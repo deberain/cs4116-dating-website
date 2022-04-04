@@ -64,6 +64,12 @@ body, html {
     width: 298px;
   }
 
+  .profile-img {
+    object-fit: cover;
+    height: 300px;
+    width: 294px;
+  }
+
   .profile-card-btns {
     display: grid;
     grid-template-columns: auto 80px 80px;
@@ -201,7 +207,7 @@ body, html {
   .chat-profile {
     grid-column: 3;
     background-color: #343a40;
-    overflow-y: scroll;
+    overflow-y: hidden;
   }
 
   .chat-thumb {
@@ -218,6 +224,9 @@ body, html {
 
   .chat-thumb-profile-pic {
     border-radius: 30px;
+    object-fit: cover;
+    height: 60px;
+    width: 60px;
   }
 
   .chat-preview {
@@ -251,8 +260,9 @@ body, html {
 
   .message-received img {
     float: left;
-    max-width: 60px;
-    width: 100%;
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
     margin-right: 20px;
     border-radius: 50%;
   }
