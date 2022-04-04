@@ -1,14 +1,61 @@
 body, html {
-    background: #202731;
-    height: 100%;
-    width: 100%;
+    background-color: #202731;
     top: 0;
     bottom: 0;
     margin: 0%;
 }
 
+.btn-purple {
+  background-color: rgb(252,8,255);
+  color: #ffffff;
+}
+
+.btn-secondary {
+  background-color: #202731;
+}
+
+.welcome-container {
+  background: rgb(252,8,255);
+  background: linear-gradient(90deg, rgba(252,8,255,1) 0%, rgba(128,0,255,1) 100%); 
+  padding: 100px 10vw 200px;
+  display: grid;
+  grid-template-columns: auto 600px;
+  align-content: center;
+  justify-content: center;
+}
+
+.welcome-text {
+  color: #ffffff;
+  font-family: 'Prompt', sans-serif;
+  grid-column: 1;
+}
+
+#login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: auto; 
+  grid-column: 2;
+}
+
+.login-form {
+  min-width: 400px;
+  max-width: 600px;
+  padding: 20px;
+  border: 1px solid #2d2d2d;
+  background: #f0f0f0;
+  font-family: 'Prompt', sans-serif;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+}
+
+.wv {
+  background: linear-gradient(90deg, rgba(252,8,255,1) 0%, rgba(128,0,255,1) 100%); 
+  height: 150px;
+}
+
 .welcome-wave {
-  position: absolute;
+  position: relative;
   bottom: 0;
   left: 0;
   width: 100%;
@@ -26,40 +73,4 @@ body, html {
 
 .welcome-wave .shape-fill {
   fill: #202731;
-}
-
-.welcome {
-  padding: 100px 20vw 300px;
-  position: relative;
-  background: rgb(252,8,255);
-  background: linear-gradient(90deg, rgba(252,8,255,1) 0%, rgba(128,0,255,1) 100%); 
-  color: #ffffff;
-  font-family: 'Prompt', sans-serif;
-}
-
-#login {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  height: auto; 
-}
-
-.login-form {
-  min-width: 400px;
-  max-width: 600px;
-  margin: 150px 25vw;
-  padding: 20px;
-  border: 1px solid #2d2d2d;
-  background: #f0f0f0;
-  font-family: 'Prompt', sans-serif;
-}
-
-.btn-purple {
-  background-color: rgb(252,8,255);
-  color: #ffffff;
-}
-
-.btn-secondary {
-  background-color: #202731;
 }
