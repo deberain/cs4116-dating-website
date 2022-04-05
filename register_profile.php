@@ -200,6 +200,11 @@ if (!isset($_SESSION['userReg'])) {
                     return false;
                 }
 
+                if(chosenInterests.length === 0) {
+                    alert("Please select your interests");
+                    return false;
+                } 
+
                 $.ajax({
                     type: "POST",
                     url: "config/profile_reg.php",
