@@ -70,6 +70,10 @@ body, html {
     width: 294px;
   }
 
+  .card-body {
+    padding-bottom: 0;
+  }
+
   .profile-card-btns {
     display: grid;
     grid-template-columns: auto 80px 80px;

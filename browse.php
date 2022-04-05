@@ -95,7 +95,7 @@ if (isset($_POST['logout'])) {
 
     <div class="browse-grid-container">
         <div class="filterOptionsContainer">
-            <h5 class="text-white">Age and Distance options</h5>
+            <h4 class="text-white">Filtering Options</h4>
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" value="" id="filterByAge" onclick="showAgeOptions()">
                 <label class="form-check-label" for="filterByAge">
@@ -114,18 +114,6 @@ if (isset($_POST['logout'])) {
                     <input type="range" class="form-control" id="maxAgeFilter" value="100" min="18" max="100">
                     <span class="rangeval" id="maxAgeVal">100</span>
                 </div>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="filterByDistance" onclick="showDistanceOptions()">
-                <label class="form-check-label" for="filterByDistance">
-                    Filter By Distance
-                </label>
-            </div>
-            <div class="mb-3" id="distanceOptions">
-                <br />
-                <label for="maxDistance" class="form-label">Maximum Distance</label>
-                <input type="range" class="form-control" id="maxDistance" value="1000" min="0" step="5" max="1000">
-                <span class="rangeval" id="maxDistanceVal">1000 km</span>
             </div>
 
             <br />
@@ -252,10 +240,6 @@ if (isset($_POST['logout'])) {
                 filterProfiles();
 
                 createProfileCards();
-            });
-
-            $("#maxDistance").on('input', function() {
-                $('#maxDistanceVal').html($('#maxDistance').val() + ' km')
             });
 
             $.ajax({

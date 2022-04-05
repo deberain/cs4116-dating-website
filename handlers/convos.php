@@ -166,9 +166,9 @@ function getChats(){
                 
             }else{
                 if ($chatSumm->lastMessageSentByLoggedInUser){
-                    echo 'You: ' . $chatSumm->lastMessage;
+                    echo 'You: ' . stripcslashes($chatSumm->lastMessage);
                 }else{
-                    echo $chatSumm->userName . ': ' . $chatSumm->lastMessage;
+                    echo $chatSumm->userName . ': ' . stripcslashes($chatSumm->lastMessage);
                 }
                 if($chatSumm->messageId > $_SESSION['last_message_id']){
                     $_SESSION['last_message_id'] = $chatSumm->messageId;
@@ -223,13 +223,13 @@ function getChat(){
             if ($row['sender_id']==$loggedInUserId){
                 echo '<div class="message-sent pb-5">
                         <img src="' . $loggedInUserProfileImage .'" alt="Avatar" class="right">
-                        <p style="word-break:break-all;">' . $row['message_content'] .'</p>
+                        <p style="word-break:break-all;">' . stripcslashes($row['message_content']) .'</p>
                         <span class="time-left">' . $row['date'] .'</span>
                     </div>';
             }else{
                 echo '<div class="message-received pb-5">
                         <img src="' . $otherUserProfileImage .'" alt="Avatar">
-                        <p style="word-break:break-all;">' . $row['message_content'] .'</p>
+                        <p style="word-break:break-all;">' . stripcslashes($row['message_content']) .'</p>
                         <span class="time-right">' . $row['date'] .'</span>
                     </div>';
             }
@@ -242,7 +242,7 @@ function getChat(){
 function sendChat(){
     include('../config/connection.php'); 
     $userId = $_POST['userId'];
-    $messageContent = $_POST['messageContent'];
+    $messageContent = mysqli_real_escape_string($con, $_POST['messageContent']);
     $loggedInUserId = $_SESSION['user_id'];
     $sql = "INSERT INTO messages (message_id, sender_id, receiver_id, message_content, date) VALUES ('NULL', '$loggedInUserId', '$userId', '$messageContent', date('Y-m-d H:i:s'))";
 
@@ -274,8 +274,8 @@ function getProfile(){
 
     echo '<div class="card matched-user-card" >
     <img class="profile-img" src="' . $otherUserProfileImage . '">
-    <h3 class="p-2">' . $row['display_name'] . ' | ' . $row['sex'] . ' | ' . $row['location'] .'</h1>
-    <p class="p-2">' . $row['bio']. '</p>
+    <h3 class="p-2">' . stripcslashes($row['display_name']) . ' | ' . $row['sex'] . ' | ' . $row['location'] .'</h1>
+    <p class="p-2">' . stripcslashes($row['bio']). '</p>
     <h4 class="p-2">Interests</h3><ul>';
 
     $sqlTwo = "SELECT * FROM user_interests INNER JOIN interests ON user_interests.interest_id = interests.interest_id WHERE user_id = '$otherUserId'";
