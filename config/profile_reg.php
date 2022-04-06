@@ -52,11 +52,11 @@ if (!empty($_POST['display_name']) || !empty($_POST['location']) || !empty($_POS
             $sql .= $sqlInterests;
             if ($con->multi_query($sql) === TRUE) {
                 $_SESSION['LoggedIn'] = '1';
-                $_SESSION['display_name'] = $display_name;
+                $_SESSION['display_name'] = stripcslashes($display_name);
                 $_SESSION['location'] = $location;
                 $_SESSION['sex'] = $sex;
                 $_SESSION['pref'] = $pref;
-                $_SESSION['bio'] = $bio;
+                $_SESSION['bio'] = stripcslashes($bio);
                 $_SESSION['interests'] = $interests;
                 $_SESSION['photo'] = $dbpath;
                 exit('Success!');
