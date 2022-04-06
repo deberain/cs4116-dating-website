@@ -390,7 +390,9 @@ if (isset($_POST['logout'])) {
                 var image = document.createElement("img");
                 image.className = "card-img-top";
                 image.setAttribute("src", profile["picture"]);
-                image.setAttribute("alt", "profile image");
+                image.setAttribute("alt", "Profile Picture");
+                image.setAttribute("onerror", "this.onerror=null;this.src='assets/default_profile_image.png';");
+
                 card.appendChild(image);
 
                 var cardbody = document.createElement("div");
@@ -477,7 +479,7 @@ if (isset($_POST['logout'])) {
                     } else {
                         $.ajax({
                             type: "POST",
-                            url: "config/Like_user.php",
+                            url: "config/like_user.php",
                             data: {
                                 target_id: target
                             },
