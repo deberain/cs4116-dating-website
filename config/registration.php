@@ -30,13 +30,14 @@
         $result = mysqli_query($con, $sql);  
 
         // Get New User id
-        $sql = "select user_id from `users` where username = '$username'";  
+        $sql = "select * from `users` where username = '$username'";  
         $result = mysqli_query($con, $sql);  
         $row = mysqli_fetch_array($result, MYSQLI_ASSOC);  
         $user_id = $row["user_id"];
 
         $_SESSION['user_id'] = $user_id;
         $_SESSION['user'] = $username;
+        $_SESSION['user_type'] = $row['user_type'];
         $_SESSION['DOB'] = $DOB;
         
         $_SESSION['userReg'] = '1';

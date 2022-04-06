@@ -30,6 +30,7 @@ if (isset($_POST['login'])) {
         $_SESSION['user'] = $username;
         $_SESSION['user_id'] = $userId;
         $_SESSION['DOB'] = $row['date_of_birth'];
+        $_SESSION['user_type'] = $row['user_type'];
 
         $sql = "select * from `profiles` where user_id = '$userId'";
         $result = mysqli_query($con, $sql);
