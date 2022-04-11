@@ -210,9 +210,19 @@ body, html {
 
   .chat-profile {
     grid-column: 3;
-    background-color: #343a40;
-    overflow-y: hidden;
+    background-color: #202731;
+    overflow: scroll;
   }
+
+  .chat-profile::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .chat-profile {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+  }
+  
 
   .chat-thumb {
     height: 80px;
@@ -391,9 +401,19 @@ body, html {
 }
 
 .matched-user-card{
-  background-color:#202731; 
+  background-color:#343a40; 
   color: #FFF; 
   border: 3px solid #FFF;
+  overflow: scroll;
+}
+
+.matched-user-card::-webkit-scrollbar {
+  display: none;
+}
+
+.matched-user-card {
+-ms-overflow-style: none;  /* IE and Edge */
+scrollbar-width: none;  /* Firefox */
 }
 
 @media only screen and (max-width: 1205px) {
@@ -404,11 +424,6 @@ body, html {
 
   .messages{
     width: 100%;
-  }
-
-  .chat-profile{
-    visibility: hidden;
-    overflow-y: hidden;
   }
 
   .chats-grid-container {

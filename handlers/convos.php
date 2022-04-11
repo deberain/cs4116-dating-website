@@ -262,7 +262,7 @@ function getProfile(){
     $otherUserId = $_POST['userId'];
 
     //get users name, location, bio, sex, picture & return in formatted HTML
-    $sql = "SELECT * FROM profiles WHERE user_id = '$otherUserId'";
+    $sql = "SELECT * FROM profiles INNER JOIN users ON profiles.user_id = users.user_id WHERE users.user_id = '$otherUserId'";
     $result = mysqli_query($con, $sql); 
     $row = mysqli_fetch_assoc($result);
     $otherUserProfileImage = '';
@@ -272,20 +272,27 @@ function getProfile(){
         $otherUserProfileImage = "./images/default_profile_image.png";
     }
 
+    $dateOfBirth = $row['date_of_birth'];
+    $today = date("Y-m-d");
+    $diff = date_diff(date_create($dateOfBirth), date_create($today));
+    $age = $diff->format('%y');
+
     echo '<div class="card matched-user-card" >
     <img class="profile-img" src="' . $otherUserProfileImage . '">
-    <h3 class="p-2">' . stripcslashes($row['display_name']) . ' | ' . $row['sex'] . ' | ' . $row['location'] .'</h1>
-    <p class="p-2">' . stripcslashes($row['bio']). '</p>
-    <h4 class="p-2">Interests</h3><ul>';
+    <h3 class="p-2">' . stripcslashes($row['display_name']) . ' (' . stripcslashes($age) .')</h1>';
+    echo '<p class="p-2">' . stripcslashes($row['display_name']). ' is a ' . stripcslashes($age) . ' year old ' . strtolower(stripcslashes($row['sex'])) . ' from '. stripcslashes($row['location']) . '.</p>';
+    echo '<p class="p-2">' . stripcslashes($row['bio']). '</p>';
 
     $sqlTwo = "SELECT * FROM user_interests INNER JOIN interests ON user_interests.interest_id = interests.interest_id WHERE user_id = '$otherUserId'";
     $resultTwo = mysqli_query($con, $sqlTwo);
-    while($rowTwo = mysqli_fetch_assoc($resultTwo)) {
-        echo '<li>' . $rowTwo['interest_name'] . '</li>';
+    if(mysqli_num_rows($resultTwo)>0){
+        echo '<h4 class="p-2">Interests</h3><ul>';
+        while($rowTwo = mysqli_fetch_assoc($resultTwo)) {
+            echo '<li>' . $rowTwo['interest_name'] . '</li>';
+        }
+        echo '</ul></div>';
     }
     
-
-    echo '</ul></div>';
     return;
 }
 
