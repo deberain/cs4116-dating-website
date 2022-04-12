@@ -188,7 +188,6 @@ if (isset($_POST['logout'])) {
     <script>
         var profiles = [];
         var profilesDisplayed = [];
-        var ages = [];
         var excludeIDs = [];
         var userMatches = [];
 
@@ -271,22 +270,12 @@ if (isset($_POST['logout'])) {
                 }
             });
 
-            $.ajax({
-                type: "GET",
-                url: "config/get_ages.php",
-                async: false
-            }).done(function(res) {
-                ages = JSON.parse(res);
+            filterProfiles();
 
-                console.log(ages);
+            createProfileCards();
 
-                filterProfiles();
-
-                createProfileCards();
-
-                console.log("Profiles being displayed: ");
-                console.log(profilesDisplayed);
-            });
+            console.log("Profiles being displayed: ");
+            console.log(profilesDisplayed);
 
 
         });
@@ -333,7 +322,7 @@ if (isset($_POST['logout'])) {
                 var profile = profiles[i];
 
                 if (profile["age"] === undefined) {
-                    var userDOB = new Date(ages[i]);
+                    var userDOB = new Date(profile["date_of_birth"]);
 
                     var ageDifMs = Date.now() - userDOB;
                     var ageDate = new Date(ageDifMs);
@@ -434,23 +423,13 @@ if (isset($_POST['logout'])) {
                 var likebutton = document.createElement("a");
                 likebutton.setAttribute("href", "#");
 
-                $.ajax({
-                    method: 'POST',
-                    url: 'config/is_user_liked.php',
-                    data: {
-                        target_id: profile["user_id"]
-                    },
-                    async: false
-                }).done(function(res) {
-                    var result = String(res).trim();
-                    if (result === "true") {
-                        likebutton.className = "btn btn-secondary profile-card-btns-decline";
-                        likebutton.innerHTML = "Undo";
-                    } else {
-                        likebutton.className = "btn btn-primary profile-card-btns-decline";
-                        likebutton.innerHTML = "Like";
-                    }
-                });
+                if (profile["is_user_liked"] === "true") {
+                    likebutton.className = "btn btn-secondary profile-card-btns-decline";
+                    likebutton.innerHTML = "Undo";
+                } else {
+                    likebutton.className = "btn btn-primary profile-card-btns-decline";
+                    likebutton.innerHTML = "Like";
+                }
 
                 likebutton.id = "like" + profile["user_id"];
                 likebutton.onclick = function(event) {

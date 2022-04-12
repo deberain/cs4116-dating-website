@@ -168,19 +168,6 @@ if (isset($_POST['logout'])) {
         async: false
       }).done(function(res) {
         pendingConnections = JSON.parse(res);
-        console.log(pendingConnections);
-      });
-
-      var ages = [];
-
-      $.ajax({
-        type: "GET",
-        url: "config/get_ages.php",
-        async: false
-      }).done(function(res) {
-        ages = JSON.parse(res);
-
-        console.log(ages);
       });
 
       var pendingProfiles = [];
@@ -191,7 +178,6 @@ if (isset($_POST['logout'])) {
 
         for (let j = 0; j < profiles.length; j++) {
           var profile = profiles[j];
-          profile.DOB = ages[j];
 
           if (profile["user_id"] === profileID) {
             pendingProfiles.push(profile);
@@ -241,7 +227,7 @@ if (isset($_POST['logout'])) {
           var agelocation = document.createElement("p");
           agelocation.className = "card-text age-location";
 
-          var userDOB = new Date(profile["DOB"]);
+          var userDOB = new Date(profile["date_of_birth"]);
 
           var ageDifMs = Date.now() - userDOB;
           var ageDate = new Date(ageDifMs);
