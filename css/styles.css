@@ -15,8 +15,30 @@ body, html {
   background-color: rgb(248, 109, 250);
 }
 
+.btn-primary:focus {
+  background-color: rgb(248, 109, 250) !important;
+}
+
+.dropdown{
+  background-color: #202731;
+  text-align: center;
+}
+.dropdown a{
+  color: #FFF;
+}
+
+.dropdown a:hover{
+  text-decoration: none;
+  font-weight: bold;
+}
+
+
 .btn-secondary {
   background-color: #202731;
+}
+
+.dropdown-toggle:after { 
+  content: none 
 }
 
 .welcome-wave {
@@ -76,19 +98,30 @@ body, html {
 
   .profile-card-btns {
     display: grid;
-    grid-template-columns: auto 80px 80px;
+    grid-template-columns: 80px auto 80px;
     align-items: end;
     height: 80px;
   }
 
-  .profile-card-btns-accept {
-    grid-column: 2;
+  .profile-car-btns-dropdown{
+    grid-column: 1;
+    grid-row: 1;
   }
 
   .profile-card-btns-decline {
     grid-column: 3;
+    grid-row: 1;
   }
 
+  .profile-card-btns-accept{
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .button-margin{
+    margin-left: auto;
+    margin-right: 5px;
+  }
   .modal-content {
     width: 302px;
   }
@@ -210,9 +243,19 @@ body, html {
 
   .chat-profile {
     grid-column: 3;
-    background-color: #343a40;
-    overflow-y: hidden;
+    background-color: #202731;
+    overflow: scroll;
   }
+
+  .chat-profile::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .chat-profile {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+  }
+  
 
   .chat-thumb {
     height: 80px;
@@ -391,9 +434,19 @@ body, html {
 }
 
 .matched-user-card{
-  background-color:#202731; 
+  background-color:#343a40; 
   color: #FFF; 
   border: 3px solid #FFF;
+  overflow: scroll;
+}
+
+.matched-user-card::-webkit-scrollbar {
+  display: none;
+}
+
+.matched-user-card {
+-ms-overflow-style: none;  /* IE and Edge */
+scrollbar-width: none;  /* Firefox */
 }
 
 @media only screen and (max-width: 1205px) {
@@ -404,11 +457,6 @@ body, html {
 
   .messages{
     width: 100%;
-  }
-
-  .chat-profile{
-    visibility: hidden;
-    overflow-y: hidden;
   }
 
   .chats-grid-container {

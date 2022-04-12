@@ -28,8 +28,10 @@ if (isset($_POST['logout'])) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300&display=swap" rel="stylesheet">
 
-  <script defer src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://kit.fontawesome.com/f07dcc15fc.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -251,7 +253,7 @@ if (isset($_POST['logout'])) {
 
           var acceptbutton = document.createElement("a");
           acceptbutton.setAttribute("href", "#");
-          acceptbutton.className = "btn btn-primary profile-card-btns-accept";
+          acceptbutton.className = "btn btn-primary profile-card-btns-accept button-margin";
           acceptbutton.innerHTML = "Accept";
 
           acceptbutton.id = "accept" + profile["user_id"];
@@ -338,6 +340,61 @@ if (isset($_POST['logout'])) {
 
           cardbuttons.appendChild(declinebutton);
 
+          //Dropdown Menu
+          //Dropdown Menu Button Group
+          var dropDownMenuButtonGroup = document.createElement("div");
+          dropDownMenuButtonGroup.className = "btn-group profile-card-btns-dropdown";
+
+          //Dropdown Menu Button
+          var dropDownMenuButton = document.createElement("a");
+          dropDownMenuButton.className = "btn dropdown-toggle btn-primary";
+          dropDownMenuButton.setAttribute("data-toggle", "dropdown");
+          dropDownMenuButton.setAttribute("href", "#");
+          
+          //Hamburger
+          var hamburger = document.createElement("i");
+          hamburger.className = "fa-solid fa-bars";
+          dropDownMenuButton.appendChild(hamburger);
+          
+          //Dropdown Menu
+          var dropDownMenu = document.createElement("ul");
+          dropDownMenu.className = "dropdown-menu dropdown";
+
+
+          //list items
+          var listItemOne = document.createElement("li");
+          var listItemTwo = document.createElement("li");;
+          var listItemOneHref = document.createElement("a");
+          var listItemTwoHref = document.createElement("a");
+          listItemOneHref.setAttribute("user_id", profile['user_id']);
+          listItemOneHref.setAttribute("href", "#");
+          listItemTwoHref.setAttribute("user_id", profile['user_id']);
+          listItemTwoHref.setAttribute("href", "#");
+
+          const userType = <?php echo json_encode($_SESSION['user_type']); ?>;
+          if(userType == 1){
+              listItemOneHref.innerHTML = "Ban User";
+              listItemOne.setAttribute("action", "ban");
+              listItemTwoHref.innerHTML = "Issue Warning";
+              listItemTwo.setAttribute("action", "warn");
+          }else{
+              listItemOneHref.innerHTML = "Report User";
+              listItemOne.setAttribute("action", "report");
+              listItemTwoHref.innerHTML = "Block User";
+              listItemTwo.setAttribute("action", "block");
+          }
+          
+          listItemOne.append(listItemOneHref);
+          listItemTwo.append(listItemTwoHref);
+
+          dropDownMenu.append(listItemOne);
+          dropDownMenu.append(listItemTwo);
+
+          dropDownMenuButtonGroup.append(dropDownMenuButton);
+          dropDownMenuButtonGroup.append(dropDownMenu);
+          cardbuttons.appendChild(dropDownMenuButtonGroup);
+
+          //Append CardButtons To The Card
           card.appendChild(cardbuttons);
 
           pendingContainer.appendChild(card);
