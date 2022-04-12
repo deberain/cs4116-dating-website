@@ -121,61 +121,8 @@ if (isset($_POST['logout'])) {
             <br />
 
             <h5 class="text-white">Interests Options</h5>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="SportCheckbox" onclick="updateFilter()">
-                <label class="form-check-label" for="SportCheckbox">Sport</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="MusicCheckbox" onclick="updateFilter()">
-                <label class="form-check-label" for="MusicCheckbox">Music</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="TVCheckbox" onclick="updateFilter()">
-                <label class="form-check-label" for="TVCheckbox">TV</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="MoviesCheckbox" onclick="updateFilter()">
-                <label class="form-check-label" for="MoviesCheckbox">Movies</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="DancingCheckbox" onclick="updateFilter()">
-                <label class="form-check-label" for="DancingCheckbox">Dancing</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="VideoGamesCheckbox" onclick="updateFilter()">
-                <label class="form-check-label" for="VideogamesCheckbox">Video Games</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="CookingCheckbox" onclick="updateFilter()">
-                <label class="form-check-label" for="CookingCheckbox">Cooking</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="PhotographyCheckbox" onclick="updateFilter()">
-                <label class="form-check-label" for="PhotographyCheckbox">Photography</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="AnimalsCheckbox" onclick="updateFilter()">
-                <label class="form-check-label" for="AnimalsCheckbox">Animals</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="AnimeCheckbox" onclick="updateFilter()">
-                <label class="form-check-label" for="AnimeCheckbox">Anime</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="FashionCheckbox" onclick="updateFilter()">
-                <label class="form-check-label" for="FashionCheckbox">Fashion</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="ScienceCheckbox" onclick="updateFilter()">
-                <label class="form-check-label" for="ScienceCheckbox">Science</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="BoardGamesCheckbox" onclick="updateFilter()">
-                <label class="form-check-label" for="BoardGamesCheckbox">Board Games</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="ArtCheckbox" onclick="updateFilter()">
-                <label class="form-check-label" for="ArtCheckbox">Art</label>
+            <div id="InterestsFilter">
+
             </div>
 
         </div>
@@ -192,6 +139,7 @@ if (isset($_POST['logout'])) {
         var profilesDisplayed = [];
         var excludeIDs = [];
         var userMatches = [];
+        var selectedinterests = [];
 
         const currentUserID = <?php echo json_encode($_SESSION["user_id"]); ?>;
 
@@ -241,6 +189,57 @@ if (isset($_POST['logout'])) {
                 filterProfiles();
 
                 createProfileCards();
+            });
+
+            $.ajax({
+                type: "GET",
+                url: "config/get_interests.php",
+                async: false
+            }).done(function(res) {
+                var interestsList = JSON.parse(res);
+
+                const InterestsFilter = document.getElementById("InterestsFilter");
+
+                for (var i = 0; i < interestsList.length; i++) {
+                    var opt = interestsList[i];
+
+                    var checkboxContainer = document.createElement("div");
+                    checkboxContainer.className = "form-check";
+
+                    var checkbox = document.createElement("input");
+                    checkbox.className = "form-check-input interest-filter-option";
+                    checkbox.type = "checkbox";
+                    checkbox.value = opt["interest_name"];
+                    checkbox.id = opt["interest_id"] + "CheckBox";
+                    checkbox.onclick = function(event) {
+
+                        if (this.checked) {
+                            selectedinterests.push(this.value);
+                        } else {
+                            var index = selectedinterests.indexOf(this.value);
+                            if (index !== -1) {
+                                selectedinterests.splice(index, 1);
+                            }
+                        }
+
+                        clearUsersContainer();
+
+                        filterProfiles();
+
+                        createProfileCards();
+                    };
+
+                    checkboxContainer.appendChild(checkbox);
+
+                    var checkboxLabel = document.createElement("label");
+                    checkboxLabel.className = "form-check-label";
+                    checkboxLabel.for = opt["interest_id"] + "CheckBox";
+                    checkboxLabel.innerText = opt["interest_name"];
+
+                    checkboxContainer.appendChild(checkboxLabel);
+
+                    InterestsFilter.appendChild(checkboxContainer);
+                }
             });
 
             $.ajax({
@@ -299,23 +298,6 @@ if (isset($_POST['logout'])) {
             }
         }
 
-        function showDistanceOptions() {
-            var checkbox = document.getElementById('filterByDistance');
-            var dOptions = document.getElementById('distanceOptions');
-
-            if (checkbox.checked) {
-                dOptions.style.display = "block";
-            } else {
-                dOptions.style.display = "none";
-
-                clearUsersContainer();
-
-                filterProfiles();
-
-                createProfileCards();
-            }
-        }
-
         function filterProfiles() {
             // FILTER PROFILES TO BE DISPLAYED
             profilesDisplayed = [];
@@ -356,6 +338,33 @@ if (isset($_POST['logout'])) {
                         continue;
                     }
                 }
+
+                if (selectedinterests.length > 0) {
+                    var user_interests = profile["interests"];
+                    var interest_names = [];
+                    var ignoreProfile = false;
+
+                    for (let j = 0; j < user_interests.length; j++) {
+                        var interest = user_interests[j]["interest_name"];
+
+                        interest_names.push(interest);
+                    }
+
+                    for(let j = 0; j < selectedinterests.length; j++) {
+                        var selectedinterest = selectedinterests[j];
+
+                        if(!interest_names.includes(selectedinterest)) {
+                            ignoreProfile = true;
+                            break;
+                        }
+                    }
+
+                    if(ignoreProfile) {
+                        continue;
+                    }
+                }
+
+
 
                 profilesDisplayed.push(profile);
             }
@@ -441,12 +450,12 @@ if (isset($_POST['logout'])) {
                 dropDownMenuButton.className = "btn dropdown-toggle btn-primary";
                 dropDownMenuButton.setAttribute("data-toggle", "dropdown");
                 dropDownMenuButton.setAttribute("href", "#");
-                
+
                 //Hamburger
                 var hamburger = document.createElement("i");
                 hamburger.className = "fa-solid fa-bars";
                 dropDownMenuButton.appendChild(hamburger);
-                
+
                 //Dropdown Menu
                 var dropDownMenu = document.createElement("ul");
                 dropDownMenu.className = "dropdown-menu dropdown";
@@ -463,18 +472,18 @@ if (isset($_POST['logout'])) {
                 listItemTwoHref.setAttribute("href", "#");
 
                 const userType = <?php echo json_encode($_SESSION['user_type']); ?>;
-                if(userType == 1){
+                if (userType == 1) {
                     listItemOneHref.innerHTML = "Ban User";
                     listItemOne.setAttribute("action", "ban");
                     listItemTwoHref.innerHTML = "Issue Warning";
                     listItemTwo.setAttribute("action", "warn");
-                }else{
+                } else {
                     listItemOneHref.innerHTML = "Report User";
                     listItemOne.setAttribute("action", "report");
                     listItemTwoHref.innerHTML = "Block User";
                     listItemTwo.setAttribute("action", "block");
                 }
-                
+
                 listItemOne.append(listItemOneHref);
                 listItemTwo.append(listItemTwoHref);
 
@@ -531,7 +540,7 @@ if (isset($_POST['logout'])) {
                     }
                 }
                 cardbuttons.appendChild(likebutton);
-                
+
                 //Append Dropdown Menu
                 cardbuttons.appendChild(dropDownMenuButtonGroup);
 

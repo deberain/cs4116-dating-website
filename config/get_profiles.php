@@ -12,7 +12,9 @@
 
     while ($row = mysqli_fetch_assoc($profiles))
     {
-        $sql = "SELECT user_interests.interest_id, interests.interest_name FROM user_interests INNER JOIN interests where user_interests.interest_id = interests.interest_id AND user_interests.user_id = '$user_id'";
+        $profile_id = $row['user_id'];
+
+        $sql = "SELECT user_interests.interest_id, interests.interest_name FROM user_interests INNER JOIN interests where user_interests.interest_id = interests.interest_id AND user_interests.user_id = '$profile_id'";
         $user_interests = mysqli_query($con, $sql);
         
         $interests = array();
