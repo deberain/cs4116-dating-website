@@ -37,7 +37,7 @@ if (isset($_POST['logout'])) {
 <body>
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="#">Cupid</a>
+            <a class="navbar-brand" href="home.php">Cupid</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -54,6 +54,13 @@ if (isset($_POST['logout'])) {
                     <li class="nav-item active">
                         <a class="nav-link" href="convos.php">Chats </a>
                     </li>
+                    <?php
+                        if($_SESSION['user_type']==1){
+                        echo '<li class="nav-item active">
+                        <a class="nav-link" href="admin.php">Admin</a>
+                        </li>';
+                        }
+                    ?>
                 </ul>
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item active">
@@ -87,6 +94,27 @@ if (isset($_POST['logout'])) {
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" id="EditProfile">Edit Profile</button>
+                        <button type="button" data-dismiss="modal" class="btn btn-secondary">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="reportUserModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Why do you wish to report this user?</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group dark-border">
+                            <textarea maxlength="500" class="form-control" id="report-user-textarea" rows="8"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="reportUser">Report User</button>
                         <button type="button" data-dismiss="modal" class="btn btn-secondary">Close</button>
                     </div>
                 </div>
@@ -470,22 +498,25 @@ if (isset($_POST['logout'])) {
                 var listItemTwo = document.createElement("li");;
                 var listItemOneHref = document.createElement("a");
                 var listItemTwoHref = document.createElement("a");
+                
                 listItemOneHref.setAttribute("user_id", profile['user_id']);
                 listItemOneHref.setAttribute("href", "#");
                 listItemTwoHref.setAttribute("user_id", profile['user_id']);
                 listItemTwoHref.setAttribute("href", "#");
+                listItemOneHref.className = "card-menu-btn";
+                listItemTwoHref.className = "card-menu-btn";
 
                 const userType = <?php echo json_encode($_SESSION['user_type']); ?>;
                 if (userType == 1) {
                     listItemOneHref.innerHTML = "Ban User";
-                    listItemOne.setAttribute("action", "ban");
+                    listItemOneHref.setAttribute("action", "ban");
                     listItemTwoHref.innerHTML = "Issue Warning";
-                    listItemTwo.setAttribute("action", "warn");
+                    listItemTwoHref.setAttribute("action", "warn");
                 } else {
                     listItemOneHref.innerHTML = "Report User";
-                    listItemOne.setAttribute("action", "report");
+                    listItemOneHref.setAttribute("action", "report");
                     listItemTwoHref.innerHTML = "Block User";
-                    listItemTwo.setAttribute("action", "block");
+                    listItemTwoHref.setAttribute("action", "block");
                 }
 
                 listItemOne.append(listItemOneHref);
@@ -574,6 +605,165 @@ if (isset($_POST['logout'])) {
         var age = Math.abs(ageDate.getUTCFullYear() - 1970);
 
         document.getElementById("age-location").innerHTML = age.toString() + " - " + userLocation.toString();
+
+           
+        //On card menu item click
+        $(document).on('click', 'a.card-menu-btn', function(e) {
+            e.preventDefault(); 
+            $action = $(this).attr('action');
+            $userId = $(this).attr('user_id');
+            if($action == "report"){
+                $("#reportUserModal").modal('show');
+                
+                $(document).on('click', '#reportUser', function(e) {
+                    if($('#report-user-textarea').val().length == 0){
+                        $('<div class="alert alert-danger"><strong>Textarea can\'t be empty</strong></div>').css({
+                            "position": "fixed",
+                            "top": 15,
+                            "left": 15,
+                            "z-index": 10000,
+                            "text-align": "center",
+                            "font-weight": "bold"
+                        }).hide().appendTo("body").fadeIn(1000);
+                        $('.alert').fadeOut(1000);
+                    }else{
+                        $.ajax({
+                            type: "POST",
+                            url: "handlers/admin.php",
+                            data: {
+                                func: 'reportUser',
+                                userId: $userId,
+                                incidentDescription: $('#report-user-textarea').val()
+                            },
+                            async: true
+                        }).done(function(res) {
+                            var result = String(res).trim();
+                            if (result == "User Reported Successfully") {
+                                $('<div class="alert alert-success"><strong>'+result+'</strong></div>').css({
+                                    "position": "fixed",
+                                    "top": 15,
+                                    "left": 15,
+                                    "z-index": 10000,
+                                    "text-align": "center",
+                                    "font-weight": "bold"
+                                }).hide().appendTo("body").fadeIn(1000);
+                                $('.alert').fadeOut(1000);
+                                $("#reportUserModal").modal('hide');
+                            }else{
+                                $('<div class="alert alert-danger"><strong>'+result+'</strong></div>').css({
+                                    "position": "fixed",
+                                    "top": 15,
+                                    "left": 15,
+                                    "z-index": 10000,
+                                    "text-align": "center",
+                                    "font-weight": "bold"
+                                }).hide().appendTo("body").fadeIn(1000);
+                                $('.alert').fadeOut(1000);
+                            }
+                        });
+                    }
+                });
+            }else if($action == "block"){
+                $.ajax({
+                    type: "POST",
+                    url: "handlers/admin.php",
+                    data: {
+                        func: 'blockUser',
+                        userId: $userId
+                    },
+                    async: true
+                }).done(function(res) {
+                    var result = String(res).trim();
+                    if (result == "User Blocked Successfully") {
+                        $('<div class="alert alert-success"><strong>'+result+'</strong></div>').css({
+                            "position": "fixed",
+                            "top": 15,
+                            "left": 15,
+                            "z-index": 10000,
+                            "text-align": "center",
+                            "font-weight": "bold"
+                        }).hide().appendTo("body").fadeIn(1000);
+                        $('.alert').fadeOut(1000);
+                    }else{
+                        $('<div class="alert alert-danger"><strong>'+result+'</strong></div>').css({
+                            "position": "fixed",
+                            "top": 15,
+                            "left": 15,
+                            "z-index": 10000,
+                            "text-align": "center",
+                            "font-weight": "bold"
+                        }).hide().appendTo("body").fadeIn(1000);
+                        $('.alert').fadeOut(1000);
+                    }
+                });
+            }else if($action == "ban"){
+                $.ajax({
+                    type: "POST",
+                    url: "handlers/admin.php",
+                    data: {
+                        func: 'banUser',
+                        userId: $userId,
+                    },
+                    async: true
+                }).done(function(res) {
+                    var result = String(res).trim();
+                    if (result == "User Banned Successfully") {
+                        $('<div class="alert alert-success"><strong>'+ result + '</strong></div>').css({
+                            "position": "fixed",
+                            "top": 15,
+                            "left": 15,
+                            "z-index": 10000,
+                            "text-align": "center",
+                            "font-weight": "bold"
+                        }).hide().appendTo("body").fadeIn(1000);
+                        $('.alert').fadeOut(1000);
+                    }else{
+                        $('<div class="alert alert-danger"><strong>'+result+'</strong></div>').css({
+                            "position": "fixed",
+                            "top": 15,
+                            "left": 15,
+                            "z-index": 10000,
+                            "text-align": "center",
+                            "font-weight": "bold"
+                        }).hide().appendTo("body").fadeIn(1000);
+                        $('.alert').fadeOut(1000);
+                    }
+                });
+            }else if($action == "warn"){
+                $.ajax({
+                    type: "POST",
+                    url: "handlers/admin.php",
+                    data: {
+                        func: 'warnUser',
+                        userId: $userId,
+                    },
+                    async: true
+                }).done(function(res) {
+                    var result = String(res).trim();
+                    if (result == "User Warned Successfully") {
+                        $('<div class="alert alert-success"><strong>'+result+'</strong></div>').css({
+                            "position": "fixed",
+                            "top": 15,
+                            "left": 15,
+                            "z-index": 10000,
+                            "text-align": "center",
+                            "font-weight": "bold"
+                        }).hide().appendTo("body").fadeIn(1000);
+                        $('.alert').fadeOut(1000);
+                    }else{
+                        $('<div class="alert alert-danger"><strong>'+result+'</strong></div>').css({
+                            "position": "fixed",
+                            "top": 15,
+                            "left": 15,
+                            "z-index": 10000,
+                            "text-align": "center",
+                            "font-weight": "bold"
+                        }).hide().appendTo("body").fadeIn(1000);
+                        $('.alert').fadeOut(1000);
+                    }
+                });
+            }
+        });
     </script>
 </body>
 

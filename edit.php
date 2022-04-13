@@ -54,6 +54,13 @@ if (isset($_POST['logout'])) {
                     <li class="nav-item active">
                         <a class="nav-link" href="convos.php">Chats </a>
                     </li>
+                    <?php
+                        if($_SESSION['user_type']==1){
+                        echo '<li class="nav-item active">
+                        <a class="nav-link" href="admin.php">Admin</a>
+                        </li>';
+                        }
+                    ?>
                 </ul>
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item active">
