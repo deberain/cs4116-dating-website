@@ -317,6 +317,10 @@ if (isset($_POST['logout'])) {
                     continue;
                 }
 
+                if (profile["is_user_blocked"] === "true") {
+                    continue;
+                }
+
                 if (currentUserPref !== "Both") {
                     if (currentUserPref === "Male" && profile["sex"] === "Female") {
                         continue;
@@ -350,16 +354,16 @@ if (isset($_POST['logout'])) {
                         interest_names.push(interest);
                     }
 
-                    for(let j = 0; j < selectedinterests.length; j++) {
+                    for (let j = 0; j < selectedinterests.length; j++) {
                         var selectedinterest = selectedinterests[j];
 
-                        if(!interest_names.includes(selectedinterest)) {
+                        if (!interest_names.includes(selectedinterest)) {
                             ignoreProfile = true;
                             break;
                         }
                     }
 
-                    if(ignoreProfile) {
+                    if (ignoreProfile) {
                         continue;
                     }
                 }

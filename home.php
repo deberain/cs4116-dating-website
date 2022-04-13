@@ -116,22 +116,36 @@ if (isset($_POST['logout'])) {
 
   <div class="suggested-users">
     <h2>Suggested Users</h2>
-    <div class="d-flex flex-row flex-nowrap overflow-auto">
-      <div class="card card-block mx-2 profile-card">
+    <div class="d-flex flex-row flex-nowrap overflow-auto" id="suggestions-container">
+      <div class="card card-block mx-2 profile-card" id="no-suggestions">
         <img class="card-img-top" src="assets/default_profile_image.png" alt="profile image">
         <div class="card-body">
-          <h5 class="card-title">User Name</h5>
-          <p class="card-text age-location">Age - Location</p>
-          <p class="card-text">User's Bio</p>
+          <p class="card-text profile-card-bio no-pending">No Suggestions For Now</p>
         </div>
         <div class="profile-card-btns">
-          <a href="#" class="btn btn-primary profile-card-btns-decline">Like</a>
+
         </div>
       </div>
     </div>
   </div>
 
   <script>
+    var profiles = [];
+    var pendingConnections = [];
+    var pendingProfiles = [];
+    var suggestedUsers = [];
+    var userMatches = [];
+    var excludeIDs = [];
+    var candidates = [];
+
+    const currentUserID = <?php echo json_encode($_SESSION["user_id"]); ?>;
+
+    const currentUserPref = <?php echo json_encode($_SESSION["pref"]); ?>;
+
+    const currentUserInterests = <?php echo json_encode($_SESSION["interests"]); ?>;
+
+    var currentUserAge;
+
     $(document).ready(function() {
       $("#Logout").on('click', function() {
         $.ajax({
@@ -150,8 +164,6 @@ if (isset($_POST['logout'])) {
         window.location = 'edit.php';
       })
 
-      var profiles = [];
-
       $.ajax({
         type: "GET",
         url: "config/get_profiles.php",
@@ -162,8 +174,6 @@ if (isset($_POST['logout'])) {
         console.log(profiles);
       });
 
-      var pendingConnections = [];
-
       $.ajax({
         type: "GET",
         url: "config/get_pending_connections.php",
@@ -171,8 +181,6 @@ if (isset($_POST['logout'])) {
       }).done(function(res) {
         pendingConnections = JSON.parse(res);
       });
-
-      var pendingProfiles = [];
 
       for (let i = 0; i < pendingConnections.length; i++) {
 
@@ -186,6 +194,22 @@ if (isset($_POST['logout'])) {
           }
         }
       }
+
+      $.ajax({
+        type: "GET",
+        url: "config/get_user_matches.php",
+        async: false
+      }).done(function(res) {
+        userMatches = JSON.parse(res);
+      });
+
+      userMatches.forEach(function(match) {
+        if (match["user_one_id"] === currentUserID) {
+          excludeIDs.push(match["user_two_id"]);
+        } else {
+          excludeIDs.push(match["user_one_id"]);
+        }
+      });
 
       console.log(pendingProfiles);
 
@@ -261,7 +285,6 @@ if (isset($_POST['logout'])) {
 
             var buttonPressed = document.getElementById(this.id);
             var target = this.id.substring(6);
-            console.log(target);
 
             $.ajax({
               type: "POST",
@@ -350,12 +373,12 @@ if (isset($_POST['logout'])) {
           dropDownMenuButton.className = "btn dropdown-toggle btn-primary";
           dropDownMenuButton.setAttribute("data-toggle", "dropdown");
           dropDownMenuButton.setAttribute("href", "#");
-          
+
           //Hamburger
           var hamburger = document.createElement("i");
           hamburger.className = "fa-solid fa-bars";
           dropDownMenuButton.appendChild(hamburger);
-          
+
           //Dropdown Menu
           var dropDownMenu = document.createElement("ul");
           dropDownMenu.className = "dropdown-menu dropdown";
@@ -372,18 +395,18 @@ if (isset($_POST['logout'])) {
           listItemTwoHref.setAttribute("href", "#");
 
           const userType = <?php echo json_encode($_SESSION['user_type']); ?>;
-          if(userType == 1){
-              listItemOneHref.innerHTML = "Ban User";
-              listItemOne.setAttribute("action", "ban");
-              listItemTwoHref.innerHTML = "Issue Warning";
-              listItemTwo.setAttribute("action", "warn");
-          }else{
-              listItemOneHref.innerHTML = "Report User";
-              listItemOne.setAttribute("action", "report");
-              listItemTwoHref.innerHTML = "Block User";
-              listItemTwo.setAttribute("action", "block");
+          if (userType == 1) {
+            listItemOneHref.innerHTML = "Ban User";
+            listItemOne.setAttribute("action", "ban");
+            listItemTwoHref.innerHTML = "Issue Warning";
+            listItemTwo.setAttribute("action", "warn");
+          } else {
+            listItemOneHref.innerHTML = "Report User";
+            listItemOne.setAttribute("action", "report");
+            listItemTwoHref.innerHTML = "Block User";
+            listItemTwo.setAttribute("action", "block");
           }
-          
+
           listItemOne.append(listItemOneHref);
           listItemTwo.append(listItemTwoHref);
 
@@ -400,7 +423,6 @@ if (isset($_POST['logout'])) {
           pendingContainer.appendChild(card);
         }
       }
-
 
       var currentUserPic = <?php echo json_encode($_SESSION['photo']); ?>;
 
@@ -421,7 +443,289 @@ if (isset($_POST['logout'])) {
       var age = Math.abs(ageDate.getUTCFullYear() - 1970);
 
       document.getElementById("age-location").innerHTML = age.toString() + " - " + userLocation.toString();
+
+      currentUserAge = age;
+
+      suggestUsers();
     });
+
+    function suggestUsers() {
+      const suggestionsContainer = document.getElementById("suggestions-container");
+      suggestUsers = [];
+
+      getCandidates();
+
+      if (candidates.length > 0) {
+        for (let i = 0; i < candidates.length; i++) {
+          var profile = candidates[i];
+
+          profile.score = 0;
+
+          var age = profile["age"];
+
+          var ageDiff = Math.abs(currentUserAge - parseInt(age));
+
+          var ageScore = 0;
+
+          // CLOSER AGE = HIGHER SCORE OUT OF 30
+          if (ageDiff < 2) {
+            ageScore += 30;
+          } else if (ageDiff < 4) {
+            ageScore += 25;
+          } else if (ageDiff < 6) {
+            ageScore += 15;
+          } else if (ageDiff < 11) {
+            ageScore += 5;
+          } else {
+            ageScore = 0;
+          }
+
+          // MORE INTERESTS IN COMMON = HIGHER SCORE OUT OF 70
+          var interests = profile["interests"];
+          var interestsInCommon = 0;
+
+          for (let j = 0; j < interests.length; j++) {
+            var interest = interests[j]["interest_id"];
+
+            if (currentUserInterests.indexOf(interest) !== -1) {
+              interestsInCommon += 1;
+            }
+          }
+
+          var interestsScore = ((interestsInCommon * 1.0 / currentUserInterests.length) * 70);
+
+          profile.score += (ageScore + interestsScore);
+        }
+
+        candidates.sort((a, b) => b.score - a.score);
+        console.log(candidates);
+
+        createSuggestedCards();
+      }
+
+
+    }
+
+    function getCandidates() {
+      // FILTER PROFILES TO BE DISPLAYED
+      candidates = [];
+
+      for (var i = 0; i < profiles.length; i++) {
+        var profile = profiles[i];
+
+        if (profile["age"] === undefined) {
+          var userDOB = new Date(profile["date_of_birth"]);
+
+          var ageDifMs = Date.now() - userDOB;
+          var ageDate = new Date(ageDifMs);
+          profile["age"] = Math.abs(ageDate.getUTCFullYear() - 1970);
+        }
+
+        if (excludeIDs.includes(profile["user_id"])) {
+          continue;
+        }
+
+        if (profile["is_user_blocked"] === "true") {
+          continue;
+        }
+
+        if (profile["is_user_liked"] === "true") {
+          continue;
+        }
+
+        if (currentUserPref !== "Both") {
+          if (currentUserPref === "Male" && profile["sex"] === "Female") {
+            continue;
+          } else if (currentUserPref === "Female" && profile["sex"] === "Male") {
+            continue;
+          }
+        }
+
+        candidates.push(profile);
+      }
+    }
+
+    function createSuggestedCards() {
+      const noSuggest = document.getElementById("no-suggestions");
+
+      const suggestionsContainer = document.getElementById("suggestions-container");
+
+      if (candidates.length > 0) {
+        noSuggest.style.display = "none";
+
+        var numOfSuggestions = Math.min(candidates.length, 4);
+
+        for (let i = 0; i < numOfSuggestions; i++) {
+          var profile = candidates[i];
+
+          var card = document.createElement("div");
+          card.className = "card card-block mx-2 profile-card";
+
+          var image = document.createElement("img");
+          image.className = "card-img-top";
+          image.setAttribute("src", profile["picture"]);
+          image.setAttribute("alt", "profile image");
+          image.setAttribute("onerror", "this.onerror=null;this.src='assets/default_profile_image.png';");
+          card.appendChild(image);
+
+          var cardbody = document.createElement("div");
+          cardbody.className = "card-body";
+
+          var username = document.createElement("h5");
+          username.className = "card-title";
+          username.innerHTML = profile["display_name"];
+          cardbody.appendChild(username);
+
+          var space = document.createElement("p");
+          cardbody.appendChild(space);
+
+          var gender = document.createElement("h6");
+          gender.className = "card-title";
+          gender.innerHTML = profile["sex"];
+          gender.style = "font-size:15px";
+          cardbody.appendChild(gender);
+
+          var agelocation = document.createElement("p");
+          agelocation.className = "card-text age-location";
+
+          var userDOB = new Date(profile["date_of_birth"]);
+
+          var ageDifMs = Date.now() - userDOB;
+          var ageDate = new Date(ageDifMs);
+          var age = Math.abs(ageDate.getUTCFullYear() - 1970);
+
+          agelocation.innerHTML = age.toString() + " - " + profile["location"];
+          cardbody.appendChild(agelocation);
+
+          var line = document.createElement("hr");
+          cardbody.appendChild(line);
+
+          var bio = document.createElement("p");
+          bio.className = "card-text";
+          bio.innerHTML = profile["bio"];
+          cardbody.appendChild(bio);
+
+          card.append(cardbody);
+
+          var cardbuttons = document.createElement("div");
+          cardbuttons.className = "profile-card-btns";
+
+          var likebutton = document.createElement("a");
+          likebutton.setAttribute("href", "#");
+          likebutton.className = "btn btn-primary profile-card-btns-decline";
+          likebutton.innerHTML = "Like";
+
+          likebutton.id = "like" + profile["user_id"];
+          likebutton.onclick = function(event) {
+
+            var buttonPressed = document.getElementById(this.id);
+            var target = this.id.substring(4);
+
+            if (buttonPressed.innerHTML === "Undo") {
+              $.ajax({
+                type: "POST",
+                url: "config/unlike_user.php",
+                data: {
+                  target_id: target
+                },
+                async: true
+              }).done(function(res) {
+                var result = String(res).trim();
+                if (result === "Success!") {
+                  console.log("disliked user id " + target);
+                  buttonPressed.className = "btn btn-primary profile-card-btns-decline";
+                  buttonPressed.innerHTML = "Like";
+                } else {
+                  alert("An error has occurred");
+                }
+              });
+            } else {
+              $.ajax({
+                type: "POST",
+                url: "config/like_user.php",
+                data: {
+                  target_id: target
+                },
+                async: true
+              }).done(function(res) {
+                var result = String(res).trim();
+                if (result === "Success!") {
+                  console.log("Liked user id " + target);
+                  buttonPressed.className = "btn btn-secondary profile-card-btns-decline";
+                  buttonPressed.innerHTML = "Undo";
+                } else if (result === "Already Liked User") {
+                  alert("You have already liked this user");
+                } else {
+                  alert("An error has occurred");
+                }
+              });
+            }
+          }
+          cardbuttons.appendChild(likebutton);
+
+          //Dropdown Menu
+          //Dropdown Menu Button Group
+          var dropDownMenuButtonGroup = document.createElement("div");
+          dropDownMenuButtonGroup.className = "btn-group profile-card-btns-dropdown";
+
+          //Dropdown Menu Button
+          var dropDownMenuButton = document.createElement("a");
+          dropDownMenuButton.className = "btn dropdown-toggle btn-primary";
+          dropDownMenuButton.setAttribute("data-toggle", "dropdown");
+          dropDownMenuButton.setAttribute("href", "#");
+
+          //Hamburger
+          var hamburger = document.createElement("i");
+          hamburger.className = "fa-solid fa-bars";
+          dropDownMenuButton.appendChild(hamburger);
+
+          //Dropdown Menu
+          var dropDownMenu = document.createElement("ul");
+          dropDownMenu.className = "dropdown-menu dropdown";
+
+
+          //list items
+          var listItemOne = document.createElement("li");
+          var listItemTwo = document.createElement("li");;
+          var listItemOneHref = document.createElement("a");
+          var listItemTwoHref = document.createElement("a");
+          listItemOneHref.setAttribute("user_id", profile['user_id']);
+          listItemOneHref.setAttribute("href", "#");
+          listItemTwoHref.setAttribute("user_id", profile['user_id']);
+          listItemTwoHref.setAttribute("href", "#");
+
+          const userType = <?php echo json_encode($_SESSION['user_type']); ?>;
+          if (userType == 1) {
+            listItemOneHref.innerHTML = "Ban User";
+            listItemOne.setAttribute("action", "ban");
+            listItemTwoHref.innerHTML = "Issue Warning";
+            listItemTwo.setAttribute("action", "warn");
+          } else {
+            listItemOneHref.innerHTML = "Report User";
+            listItemOne.setAttribute("action", "report");
+            listItemTwoHref.innerHTML = "Block User";
+            listItemTwo.setAttribute("action", "block");
+          }
+
+          listItemOne.append(listItemOneHref);
+          listItemTwo.append(listItemTwoHref);
+
+          dropDownMenu.append(listItemOne);
+          dropDownMenu.append(listItemTwo);
+
+          dropDownMenuButtonGroup.append(dropDownMenuButton);
+          dropDownMenuButtonGroup.append(dropDownMenu);
+          cardbuttons.appendChild(dropDownMenuButtonGroup);
+
+          //Append CardButtons To The Card
+          card.appendChild(cardbuttons);
+
+          suggestionsContainer.appendChild(card);
+        }
+      }
+
+
+    }
   </script>
 </body>
 
