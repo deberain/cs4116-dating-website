@@ -103,10 +103,11 @@ body, html {
     height: 80px;
   }
 
-  .profile-car-btns-dropdown{
+  .profile-card-btns-dropdown{
     grid-column: 1;
     grid-row: 1;
   }
+
 
   .profile-card-btns-decline {
     grid-column: 3;
@@ -447,6 +448,33 @@ body, html {
 .matched-user-card {
 -ms-overflow-style: none;  /* IE and Edge */
 scrollbar-width: none;  /* Firefox */
+}
+
+.dark-border textarea {
+  border: 3px solid #000;
+  margin: 10px;
+  padding: 0px;
+  background-color: #FFF;
+  max-width: 280px;
+}
+
+.dark-border .form-control:focus {
+  border: 3px solid rgba(23, 23, 23, 0.1);
+  box-shadow: 0 0 0 0.2rem rgba(30, 30, 30, 0.5);
+}
+
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  filter:alpha(opacity=50);
+  -moz-opacity:0.5;
+  -khtml-opacity: 0.5;
+  opacity: 0.5;
+  z-index: 10000;
 }
 
 @media only screen and (max-width: 1205px) {

@@ -30,41 +30,22 @@ if (!isset($_SESSION['LoggedIn'])) {
 
 if(isset($_POST['func']))
 {
-    if($_POST['func'] == "getChats")
-    {
+    if($_POST['func'] == "getChats"){
         getChats();
-    }else if($_POST['func'] == "getChat")
-    {
-        if($_POST['userId']){
-            getChat();
-        }else{
-            //userId not passed in the request
-            http_response_code(404);
-        }
-        
-    }else if($_POST['func'] == "sendChat")
-    {
-        if($_POST['userId']){
-            sendChat();
-        }else{
-            //userId not passed in the request
-            http_response_code(404);
-        }
-    }else if($_POST['func'] == "getProfile")
-    {
-        if($_POST['userId']){
-            getProfile();
-        }else{
-            //userId not passed in the request
-            http_response_code(404);
-        }
+    }else if($_POST['func'] == "getChat" && $_POST['userId']){
+        getChat();
+    }else if($_POST['func'] == "sendChat" && $_POST['userId']){
+        sendChat();
+    }else if($_POST['func'] == "getProfile" && $_POST['userId']){
+        getProfile();
+    }else{
+        http_response_code(400);
     }
 }else{
+    http_response_code(400);
     header('Location: index.php');
-    exit();
 }
-
-
+exit();
 
 function getChats(){
     include('../config/connection.php'); 
@@ -223,13 +204,13 @@ function getChat(){
             if ($row['sender_id']==$loggedInUserId){
                 echo '<div class="message-sent pb-5">
                         <img src="' . $loggedInUserProfileImage .'" alt="Avatar" class="right">
-                        <p style="word-break:break-all;">' . stripcslashes($row['message_content']) .'</p>
+                        <p style="word-break:normal;">' . stripcslashes($row['message_content']) .'</p>
                         <span class="time-left">' . $row['date'] .'</span>
                     </div>';
             }else{
                 echo '<div class="message-received pb-5">
                         <img src="' . $otherUserProfileImage .'" alt="Avatar">
-                        <p style="word-break:break-all;">' . stripcslashes($row['message_content']) .'</p>
+                        <p style="word-break:normal;">' . stripcslashes($row['message_content']) .'</p>
                         <span class="time-right">' . $row['date'] .'</span>
                     </div>';
             }
