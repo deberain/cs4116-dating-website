@@ -55,11 +55,11 @@ if (isset($_POST['logout'])) {
                         <a class="nav-link" href="convos.php">Chats </a>
                     </li>
                     <?php
-                        if($_SESSION['user_type']==1){
+                    if ($_SESSION['user_type'] == 1) {
                         echo '<li class="nav-item active">
                         <a class="nav-link" href="admin.php">Admin</a>
                         </li>';
-                        }
+                    }
                     ?>
                 </ul>
                 <ul class="navbar-nav ml-auto">
@@ -345,6 +345,10 @@ if (isset($_POST['logout'])) {
                     continue;
                 }
 
+                if (profile["banned"] === "1") {
+                    continue;
+                }
+
                 if (profile["is_user_blocked"] === "true") {
                     continue;
                 }
@@ -498,7 +502,7 @@ if (isset($_POST['logout'])) {
                 var listItemTwo = document.createElement("li");;
                 var listItemOneHref = document.createElement("a");
                 var listItemTwoHref = document.createElement("a");
-                
+
                 listItemOneHref.setAttribute("user_id", profile['user_id']);
                 listItemOneHref.setAttribute("href", "#");
                 listItemTwoHref.setAttribute("user_id", profile['user_id']);
@@ -606,17 +610,19 @@ if (isset($_POST['logout'])) {
 
         document.getElementById("age-location").innerHTML = age.toString() + " - " + userLocation.toString();
 
-           
+
         //On card menu item click
         $(document).on('click', 'a.card-menu-btn', function(e) {
-            e.preventDefault(); 
+            e.preventDefault();
             $action = $(this).attr('action');
             $userId = $(this).attr('user_id');
-            if($action == "report"){
+
+            const profileCard = this.parentElement.parentElement.parentElement.parentElement.parentElement;
+            if ($action == "report") {
                 $("#reportUserModal").modal('show');
-                
+
                 $(document).on('click', '#reportUser', function(e) {
-                    if($('#report-user-textarea').val().length == 0){
+                    if ($('#report-user-textarea').val().length == 0) {
                         $('<div class="alert alert-danger"><strong>Textarea can\'t be empty</strong></div>').css({
                             "position": "fixed",
                             "top": 15,
@@ -626,7 +632,7 @@ if (isset($_POST['logout'])) {
                             "font-weight": "bold"
                         }).hide().appendTo("body").fadeIn(1000);
                         $('.alert').fadeOut(1000);
-                    }else{
+                    } else {
                         $.ajax({
                             type: "POST",
                             url: "handlers/admin.php",
@@ -639,7 +645,7 @@ if (isset($_POST['logout'])) {
                         }).done(function(res) {
                             var result = String(res).trim();
                             if (result == "User Reported Successfully") {
-                                $('<div class="alert alert-success"><strong>'+result+'</strong></div>').css({
+                                $('<div class="alert alert-success"><strong>' + result + '</strong></div>').css({
                                     "position": "fixed",
                                     "top": 15,
                                     "left": 15,
@@ -649,8 +655,8 @@ if (isset($_POST['logout'])) {
                                 }).hide().appendTo("body").fadeIn(1000);
                                 $('.alert').fadeOut(1000);
                                 $("#reportUserModal").modal('hide');
-                            }else{
-                                $('<div class="alert alert-danger"><strong>'+result+'</strong></div>').css({
+                            } else {
+                                $('<div class="alert alert-danger"><strong>' + result + '</strong></div>').css({
                                     "position": "fixed",
                                     "top": 15,
                                     "left": 15,
@@ -663,7 +669,7 @@ if (isset($_POST['logout'])) {
                         });
                     }
                 });
-            }else if($action == "block"){
+            } else if ($action == "block") {
                 $.ajax({
                     type: "POST",
                     url: "handlers/admin.php",
@@ -675,7 +681,7 @@ if (isset($_POST['logout'])) {
                 }).done(function(res) {
                     var result = String(res).trim();
                     if (result == "User Blocked Successfully") {
-                        $('<div class="alert alert-success"><strong>'+result+'</strong></div>').css({
+                        $('<div class="alert alert-success"><strong>' + result + '</strong></div>').css({
                             "position": "fixed",
                             "top": 15,
                             "left": 15,
@@ -683,9 +689,12 @@ if (isset($_POST['logout'])) {
                             "text-align": "center",
                             "font-weight": "bold"
                         }).hide().appendTo("body").fadeIn(1000);
+
+                        profileCard.parentElement.removeChild(profileCard);
+
                         $('.alert').fadeOut(1000);
-                    }else{
-                        $('<div class="alert alert-danger"><strong>'+result+'</strong></div>').css({
+                    } else {
+                        $('<div class="alert alert-danger"><strong>' + result + '</strong></div>').css({
                             "position": "fixed",
                             "top": 15,
                             "left": 15,
@@ -696,7 +705,7 @@ if (isset($_POST['logout'])) {
                         $('.alert').fadeOut(1000);
                     }
                 });
-            }else if($action == "ban"){
+            } else if ($action == "ban") {
                 $.ajax({
                     type: "POST",
                     url: "handlers/admin.php",
@@ -708,7 +717,7 @@ if (isset($_POST['logout'])) {
                 }).done(function(res) {
                     var result = String(res).trim();
                     if (result == "User Banned Successfully") {
-                        $('<div class="alert alert-success"><strong>'+ result + '</strong></div>').css({
+                        $('<div class="alert alert-success"><strong>' + result + '</strong></div>').css({
                             "position": "fixed",
                             "top": 15,
                             "left": 15,
@@ -717,8 +726,8 @@ if (isset($_POST['logout'])) {
                             "font-weight": "bold"
                         }).hide().appendTo("body").fadeIn(1000);
                         $('.alert').fadeOut(1000);
-                    }else{
-                        $('<div class="alert alert-danger"><strong>'+result+'</strong></div>').css({
+                    } else {
+                        $('<div class="alert alert-danger"><strong>' + result + '</strong></div>').css({
                             "position": "fixed",
                             "top": 15,
                             "left": 15,
@@ -726,10 +735,13 @@ if (isset($_POST['logout'])) {
                             "text-align": "center",
                             "font-weight": "bold"
                         }).hide().appendTo("body").fadeIn(1000);
+
+                        profileCard.parentElement.removeChild(profileCard);
+
                         $('.alert').fadeOut(1000);
                     }
                 });
-            }else if($action == "warn"){
+            } else if ($action == "warn") {
                 $.ajax({
                     type: "POST",
                     url: "handlers/admin.php",
@@ -741,7 +753,7 @@ if (isset($_POST['logout'])) {
                 }).done(function(res) {
                     var result = String(res).trim();
                     if (result == "User Warned Successfully") {
-                        $('<div class="alert alert-success"><strong>'+result+'</strong></div>').css({
+                        $('<div class="alert alert-success"><strong>' + result + '</strong></div>').css({
                             "position": "fixed",
                             "top": 15,
                             "left": 15,
@@ -750,8 +762,8 @@ if (isset($_POST['logout'])) {
                             "font-weight": "bold"
                         }).hide().appendTo("body").fadeIn(1000);
                         $('.alert').fadeOut(1000);
-                    }else{
-                        $('<div class="alert alert-danger"><strong>'+result+'</strong></div>').css({
+                    } else {
+                        $('<div class="alert alert-danger"><strong>' + result + '</strong></div>').css({
                             "position": "fixed",
                             "top": 15,
                             "left": 15,

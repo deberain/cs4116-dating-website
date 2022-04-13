@@ -46,7 +46,7 @@ function blockUser(){
     include('../config/connection.php'); 
     $userIdToBlock = $_POST['userId'];
     $loggedInUser = $_SESSION['user_id'];
-    $sql = "INSERT INTO `blocked_user_relationships` (`block_id`, `user_id`, `target_user_id`, `date`) VALUES ('NULL', '$loggedInUser', '$userIdToBlock', date('Y-m-d H:i:s'));";
+    $sql = "INSERT INTO `interactions` (`interaction_id`, `user_id`, `target_user`, `interaction_type`, `date`) VALUES ('NULL', '$loggedInUser', '$userIdToBlock', '2', date('Y-m-d H:i:s'));";
     
     $result = mysqli_query($con, $sql);
     mysqli_close($con);
