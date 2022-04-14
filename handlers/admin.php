@@ -16,6 +16,10 @@ if(isset($_POST['func']))
         banUser();
     }else if($_POST['func'] == "warnUser" && $_POST['userId']){
         warnUser();
+    }else if($_POST['func'] == "getReportedUsersTable"){
+        getReportedUserTable();
+    }else if($_POST['func'] == "removeReportFromDatabase" && $_POST['reportId']){
+        removeReportFromDatabase();
     }else{
         http_response_code(400);
     }
@@ -95,4 +99,59 @@ function warnUser(){
         exit('An Error Occurred Updating The Database');
     }
 }
+
+function getReportedUserTable(){
+    //Get Data From DB
+    include ('../config/connection.php');
+    $sql = 'SELECT * FROM reported_users;';
+    $result = mysqli_query($con, $sql);  
+    $count = mysqli_num_rows($result);
+    if($count<1){
+        $noReportedUsers = '<h1 style="border-radius:15px;border:3px solid #FFF;color:#FFF;padding:20px;display:inline-block">There are currently no reported users!</h1>';
+        echo json_encode(array('data' => $noReportedUsers));
+        exit();
+    }
+
+    //Create HTML Table Using DB Data
+    $tableData = '<table class="table table-striped table-light">
+    <thead>
+        <tr>
+        <th scope="col">Reported User Id</th>
+        <th scope="col">Reporting User Id</th>
+        <th scope="col">Incident Description</th>
+        <th scope="col">Date</th>
+        <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>';
+
+    while($row = mysqli_fetch_assoc($result)) {
+        $tableData .= '<tr>
+        <th scope="row">'. $row['reported_user'] .'</th>
+        <td>'. $row['reporting_user'] .'</td>
+        <td>'. $row['incident_description'] .'</td>
+        <td>'.$row['date'].'</td>
+        <td><button type="button" action="ban" user-id="'.$row['reported_user'].'" class="admin-action btn btn-outline-danger m-1">Ban</button><button type="button" action="warn" user-id="'.$row['reported_user'].'" class="admin-action btn btn-outline-warning m-1">Warn</button><button type="button" action="remove" report-id="'.$row['report_id'].'" class="admin-action btn btn-outline-success m-1">Remove</button></td>
+        </tr>';
+    }
+
+    $tableData .='</tbody></table>';
+
+    echo json_encode(array('data' => $tableData));
+    exit();
+}
+
+function removeReportFromDatabase(){
+    include ('../config/connection.php');
+    $reportId = $_POST['reportId'];
+    $sql = "DELETE FROM reported_users WHERE report_id=".$reportId.";";
+    $result = mysqli_query($con, $sql);
+    mysqli_close($con);
+    if ($result) {
+        exit("Report Removed From Database Successfully");
+    } else {
+        exit('Error Deleting Data From Database');
+    }
+}
+
 ?>
