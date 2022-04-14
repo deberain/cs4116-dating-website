@@ -793,55 +793,6 @@ if (isset($_POST['logout'])) {
 
         if ($action == "report") {
           $("#reportUserModal").modal('show');
-
-          $(document).on('click', '#reportUser', function(e) {
-            if ($('#report-user-textarea').val().length == 0) {
-              $('<div class="alert alert-danger"><strong>Textarea can\'t be empty</strong></div>').css({
-                "position": "fixed",
-                "top": 15,
-                "left": 15,
-                "z-index": 10000,
-                "text-align": "center",
-                "font-weight": "bold"
-              }).hide().appendTo("body").fadeIn(1000);
-              $('.alert').fadeOut(1000);
-            } else {
-              $.ajax({
-                type: "POST",
-                url: "handlers/admin.php",
-                data: {
-                  func: 'reportUser',
-                  userId: $userId,
-                  incidentDescription: $('#report-user-textarea').val()
-                },
-                async: true
-              }).done(function(res) {
-                var result = String(res).trim();
-                if (result == "User Reported Successfully") {
-                  $('<div class="alert alert-success"><strong>' + result + '</strong></div>').css({
-                    "position": "fixed",
-                    "top": 15,
-                    "left": 15,
-                    "z-index": 10000,
-                    "text-align": "center",
-                    "font-weight": "bold"
-                  }).hide().appendTo("body").fadeIn(1000);
-                  $('.alert').fadeOut(1000);
-                  $("#reportUserModal").modal('hide');
-                } else {
-                  $('<div class="alert alert-danger"><strong>' + result + '</strong></div>').css({
-                    "position": "fixed",
-                    "top": 15,
-                    "left": 15,
-                    "z-index": 10000,
-                    "text-align": "center",
-                    "font-weight": "bold"
-                  }).hide().appendTo("body").fadeIn(1000);
-                  $('.alert').fadeOut(1000);
-                }
-              });
-            }
-          });
         } else if ($action == "block") {
           $.ajax({
             type: "POST",
@@ -949,6 +900,56 @@ if (isset($_POST['logout'])) {
           });
         }
       });
+      $(document).on('click', '#reportUser', function(e) {
+            if ($('#report-user-textarea').val().length == 0) {
+              $('<div class="alert alert-danger"><strong>Textarea can\'t be empty</strong></div>').css({
+                "position": "fixed",
+                "top": 15,
+                "left": 15,
+                "z-index": 10000,
+                "text-align": "center",
+                "font-weight": "bold"
+              }).hide().appendTo("body").fadeIn(1000);
+              $('.alert').fadeOut(1000);
+            } else {
+              $.ajax({
+                type: "POST",
+                url: "handlers/admin.php",
+                data: {
+                  func: 'reportUser',
+                  userId: $userId,
+                  incidentDescription: $('#report-user-textarea').val()
+                },
+                async: true
+              }).done(function(res) {
+                var result = String(res).trim();
+                if (result == "User Reported Successfully") {
+                  $('<div class="alert alert-success"><strong>' + result + '</strong></div>').css({
+                    "position": "fixed",
+                    "top": 15,
+                    "left": 15,
+                    "z-index": 10000,
+                    "text-align": "center",
+                    "font-weight": "bold"
+                  }).hide().appendTo("body").fadeIn(1000);
+                  $('.alert').fadeOut(1000);
+                  $('#report-user-textarea').val('');
+                  $('.dropdown-btn').next('ul').hide();
+                  $("#reportUserModal").modal('hide');
+                } else {
+                  $('<div class="alert alert-danger"><strong>' + result + '</strong></div>').css({
+                    "position": "fixed",
+                    "top": 15,
+                    "left": 15,
+                    "z-index": 10000,
+                    "text-align": "center",
+                    "font-weight": "bold"
+                  }).hide().appendTo("body").fadeIn(1000);
+                  $('.alert').fadeOut(1000);
+                }
+              });
+            }
+          });
     }
   </script>
 </body>

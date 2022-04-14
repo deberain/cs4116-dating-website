@@ -44,7 +44,7 @@ if (isset($_POST['logout'])) {
                         <a class="nav-link" href="home.php">Home <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="#">Browse </a>
+                        <a class="nav-link" href="browse.php">Browse </a>
                     </li>
                     <li class="nav-item active">
                         <a class="nav-link" href="convos.php">Chats </a>
@@ -94,47 +94,12 @@ if (isset($_POST['logout'])) {
             </div>
         </div>
     </header>
-    <div class="container-fluid p-5">
+    <div id="reported-users-section" class="container-fluid p-5">
         <br>
         <h1 class="text-light"><b>Reported Users</b></h1>
         <br>
 
-        <table class="table table-striped table-light">
-            <thead>
-                <tr>
-                <th scope="col">Reported User Id</th>
-                <th scope="col">Reporting User Id</th>
-                <th scope="col">Incident Description</th>
-                <th scope="col">Date</th>
-                <th scope="col">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                
-                </tr>
-                <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>Otto</td>
-                <td>@fat</td>
-                
-                </tr>
-                <tr>
-                <th scope="row">3</th>
-                <td>Larry</td>
-                <td>the Bird</td>
-                <td>Otto</td>
-                <td>@twitter</td>
-                </tr>
-            </tbody>
-        </table>
+        
     </div>
     <script>
         $(document).ready(function() {
@@ -154,6 +119,141 @@ if (isset($_POST['logout'])) {
             $("#EditProfile").on('click', function() {
                 window.location = 'edit.php';
             })
+
+            $.ajax({
+                    method: 'POST',
+                    url: 'handlers/admin.php',
+                    data: {
+                        func: 'getReportedUsersTable'
+                    },
+                    success: function(res){  
+                        try {
+                            let tableData = JSON.parse(res);
+                            $('#reported-users-section').append(tableData.data);
+                        } catch(e) {
+                            $('<div class="alert alert-danger"><strong>An Error Occured Querying Database</strong></div>').css({
+                            "position": "fixed",
+                            "top": 15,
+                            "left": 15,
+                            "z-index": 10000,
+                            "text-align": "center",
+                            "font-weight": "bold"
+                        }).hide().appendTo("body").fadeIn(1000);
+                        $('.alert').fadeOut(1000);
+                        }
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) { 
+                        $('<div class="alert alert-danger"><strong>An Error Occured Querying Database: '+textStatus+'</strong></div>').css({
+                            "position": "fixed",
+                            "top": 15,
+                            "left": 15,
+                            "z-index": 10000,
+                            "text-align": "center",
+                            "font-weight": "bold"
+                        }).hide().appendTo("body").fadeIn(1000);
+                        $('.alert').fadeOut(1000);
+                    } 
+                });
+
+                $(document).on("click",".admin-action",function() {
+                    $action = $(this).attr('action');
+                    if($action=='ban'){
+                        $userId = $(this).attr('user-id');
+                        $.ajax({
+                            type: "POST",
+                            url: "handlers/admin.php",
+                            data: {
+                                func: 'banUser',
+                                userId: $userId,
+                            },
+                            async: true
+                        }).done(function(res) {
+                            var result = String(res).trim();
+                            if (result == "User Banned Successfully") {
+                                $('<div class="alert alert-success"><strong>' + result + '</strong></div>').css({
+                                    "position": "fixed",
+                                    "top": 15,
+                                    "left": 15,
+                                    "z-index": 10000,
+                                    "text-align": "center",
+                                    "font-weight": "bold"
+                                }).hide().appendTo("body").fadeIn(1000);
+                                $('.alert').fadeOut(1000);
+                            } else {
+                                $('<div class="alert alert-danger"><strong>' + result + '</strong></div>').css({
+                                    "position": "fixed",
+                                    "top": 15,
+                                    "left": 15,
+                                    "z-index": 10000,
+                                    "text-align": "center",
+                                    "font-weight": "bold"
+                                }).hide().appendTo("body").fadeIn(1000);
+                                $('.alert').fadeOut(1000);
+                            }
+                        });
+                    }else if($action == 'warn'){
+                        $userId = $(this).attr('user-id');
+                        $.ajax({
+                            type: "POST",
+                            url: "handlers/admin.php",
+                            data: {
+                                func: 'warnUser',
+                                userId: $userId,
+                            },
+                            async: true
+                        }).done(function(res) {
+                            var result = String(res).trim();
+                            if (result == "User Warned Successfully") {
+                                $('<div class="alert alert-success"><strong>' + result + '</strong></div>').css({
+                                    "position": "fixed",
+                                    "top": 15,
+                                    "left": 15,
+                                    "z-index": 10000,
+                                    "text-align": "center",
+                                    "font-weight": "bold"
+                                }).hide().appendTo("body").fadeIn(1000);
+                                $('.alert').fadeOut(1000);
+                            } else {
+                                $('<div class="alert alert-danger"><strong>' + result + '</strong></div>').css({
+                                    "position": "fixed",
+                                    "top": 15,
+                                    "left": 15,
+                                    "z-index": 10000,
+                                    "text-align": "center",
+                                    "font-weight": "bold"
+                                }).hide().appendTo("body").fadeIn(1000);
+                                $('.alert').fadeOut(1000);
+                            }
+                        });
+                    }else if($action == 'remove'){
+                        $reportId = $(this).attr('report-id');
+                        $.ajax({
+                            type: "POST",
+                            url: "handlers/admin.php",
+                            data: {
+                                func: 'removeReportFromDatabase',
+                                reportId: $reportId,
+                            },
+                            async: true
+                        }).done(function(res) {
+                            var result = String(res).trim();
+                            if (result == "Report Removed From Database Successfully") {
+                                location.reload();
+                            } else {
+                                $('<div class="alert alert-danger"><strong>' + result + '</strong></div>').css({
+                                    "position": "fixed",
+                                    "top": 15,
+                                    "left": 15,
+                                    "z-index": 10000,
+                                    "text-align": "center",
+                                    "font-weight": "bold"
+                                }).hide().appendTo("body").fadeIn(1000);
+                                $('.alert').fadeOut(1000);
+                            }
+                        });
+                    }
+                    
+                });
         });
         var currentUserPic = <?php echo json_encode($_SESSION['photo']); ?>;
 
