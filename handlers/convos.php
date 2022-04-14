@@ -258,9 +258,15 @@ function getProfile(){
     $diff = date_diff(date_create($dateOfBirth), date_create($today));
     $age = $diff->format('%y');
 
-    echo '<div class="card matched-user-card" >
-    <img class="profile-img" src="' . $otherUserProfileImage . '">
-    <h3 class="p-2">' . stripcslashes($row['display_name']) . ' (' . stripcslashes($age) .')</h1>';
+    echo '<div class="card matched-user-card" ><img class="profile-img" src="' . $otherUserProfileImage . '">';
+    echo '<div class="row justify-content-start m-2" style="padding-top: 10px; padding-bottom: 10px;"><div class="col-6">';
+    if($_SESSION['user_type']==1){
+        echo '<button type="button" action="warn" user-id="'.$row['user_id'].'" style="color:black; font-weight:bold;" class="admin-action btn btn-warning">Warn User</button></div><div class="col-6"><button type="button" action="ban" user-id="'.$row['user_id'].'" style="color:black; font-weight:bold;" class="admin-action btn btn-danger">Ban User</button>';
+    }else{
+        echo '<button type="button" action="block" user-id="'.$row['user_id'].'" style="color:black; font-weight:bold;" class="admin-action btn btn-warning">Block User</button></div><div class="col-6"><button type="button" action="report" user-id="'.$row['user_id'].'" style="color:black; font-weight:bold;" class="admin-action btn btn-danger">Report User</button>';
+    }
+    echo '</div></div>';
+    echo '<h3 class="p-2">' . stripcslashes($row['display_name']) . ' (' . stripcslashes($age) .')</h1>';
     echo '<p class="p-2">' . stripcslashes($row['display_name']). ' is a ' . stripcslashes($age) . ' year old ' . strtolower(stripcslashes($row['sex'])) . ' from '. stripcslashes($row['location']) . '.</p>';
     echo '<p class="p-2">' . stripcslashes($row['bio']). '</p>';
 

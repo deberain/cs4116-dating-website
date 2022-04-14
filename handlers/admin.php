@@ -51,12 +51,16 @@ function blockUser(){
     $userIdToBlock = $_POST['userId'];
     $loggedInUser = $_SESSION['user_id'];
     $sql = "INSERT INTO `interactions` (`interaction_id`, `user_id`, `target_user`, `interaction_type`, `date`) VALUES ('NULL', '$loggedInUser', '$userIdToBlock', '2', date('Y-m-d H:i:s'));";
-    
     $result = mysqli_query($con, $sql);
-    mysqli_close($con);
     if($result){
-      exit('User Blocked Successfully');
+      $sqlTwo = "DELETE from matches WHERE (user_one_id = '$userIdToBlock' AND user_two_id = '$loggedInUser') OR (user_two_id = '$userIdToBlock' AND user_one_id = '$loggedInUser');";
+      $resultTwo = mysqli_query($con, $sqlTwo);
+      if($resultTwo){
+        mysqli_close($con);
+        exit('User Blocked Successfully');
+      }
     }
+    mysqli_close($con);
     exit('An Error Occurred Inserting Data Into The Database');
 }
 
@@ -66,10 +70,15 @@ function banUser(){
     $userIdToBan = $_POST['userId'];
     $sql = "UPDATE users SET banned = 1 WHERE user_id=$userIdToBan;";
     $result = mysqli_query($con, $sql);
-    mysqli_close($con);
     if ($result) {
+      $sqlTwo = "DELETE from matches WHERE (user_one_id = '$userIdToBan') OR (user_two_id = '$userIdToBan');";
+      $resultTwo = mysqli_query($con, $sqlTwo);
+      if($resultTwo){
+        mysqli_close($con);
         exit('User Banned Successfully');
+      }
     } else {
+        mysqli_close($con);
         exit('An Error Occurred Updating The Database');
     }
     

@@ -237,7 +237,7 @@ body, html {
     border-bottom: 3px dotted #FFF;
 
   }
-  
+
   .send-message-area{
     height:16vh;
   }
@@ -245,7 +245,8 @@ body, html {
   .chat-profile {
     grid-column: 3;
     background-color: #202731;
-    overflow: scroll;
+    overflow-y: scroll;
+    overflow-x: hidden;
   }
 
   .chat-profile::-webkit-scrollbar {
@@ -438,7 +439,8 @@ body, html {
   background-color:#343a40; 
   color: #FFF; 
   border: 3px solid #FFF;
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .matched-user-card::-webkit-scrollbar {
