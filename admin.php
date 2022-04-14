@@ -238,7 +238,19 @@ if (isset($_POST['logout'])) {
                         }).done(function(res) {
                             var result = String(res).trim();
                             if (result == "Report Removed From Database Successfully") {
-                                location.reload();
+                                $('<div class="alert alert-success"><strong>' + result + '</strong></div>').css({
+                                    "position": "fixed",
+                                    "top": 15,
+                                    "left": 15,
+                                    "z-index": 10000,
+                                    "text-align": "center",
+                                    "font-weight": "bold"
+                                }).hide().appendTo("body").fadeIn(1000, function(){
+                                    $('.alert').fadeOut(1000, function(){
+                                        location.reload();
+                                    });
+                                });
+                                
                             } else {
                                 $('<div class="alert alert-danger"><strong>' + result + '</strong></div>').css({
                                     "position": "fixed",

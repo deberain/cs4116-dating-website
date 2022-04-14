@@ -97,7 +97,27 @@ if (isset($_POST['logout'])) {
                 </div>
             </div>
         </div>
-
+        <div class="modal fade" id="reportUserModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Why do you wish to report this user?</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group dark-border">
+                            <textarea maxlength="500" class="form-control" id="report-user-textarea" rows="8"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="reportUser">Report User</button>
+                        <button type="button" data-dismiss="modal" class="btn btn-secondary">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </header>
 
     <div class="chats-grid-container">
@@ -263,12 +283,12 @@ if (isset($_POST['logout'])) {
             });
 
             $('.send-message-area').on('click', '#sendButton', function() {
-                var messageContent = $('textarea').val();
+               var messageContent = $('#message-box').val();
                 var userId = $(this).attr('user_id');
                 if (messageContent.length < 1) {
                     alert('Message box is empty!');
                 } else {
-                    $('textarea').val('');
+                    $('#message-box').val('');
                     $.ajax({
                         method: 'POST',
                         url: 'handlers/convos.php',
@@ -287,6 +307,175 @@ if (isset($_POST['logout'])) {
                     })
                 }
             })
+
+    $(document).on('click', '.admin-action', function(e) {
+        e.preventDefault();
+        $action = $(this).attr('action');
+        $userId = $(this).attr('user-id');
+
+        if ($action == "report") {
+          $("#reportUserModal").modal('show');
+        } else if ($action == "block") {
+          $.ajax({
+            type: "POST",
+            url: "handlers/admin.php",
+            data: {
+              func: 'blockUser',
+              userId: $userId
+            },
+            async: true
+          }).done(function(res) {
+            var result = String(res).trim();
+            if (result == "User Blocked Successfully") {
+              $('<div class="alert alert-success"><strong>' + result + '</strong></div>').css({
+                "position": "fixed",
+                "top": 15,
+                "left": 15,
+                "z-index": 10000,
+                "text-align": "center",
+                "font-weight": "bold"
+              }).hide().appendTo("body").fadeIn(1000, function(){
+                $('.alert').fadeOut(1000, function(){
+                  location.reload();
+                });
+              });
+              
+            } else {
+              $('<div class="alert alert-danger"><strong>' + result + '</strong></div>').css({
+                "position": "fixed",
+                "top": 15,
+                "left": 15,
+                "z-index": 10000,
+                "text-align": "center",
+                "font-weight": "bold"
+              }).hide().appendTo("body").fadeIn(1000);
+              $('.alert').fadeOut(1000);
+            }
+          });
+        } else if ($action == "ban") {
+            
+          $.ajax({
+            type: "POST",
+            url: "handlers/admin.php",
+            data: {
+              func: 'banUser',
+              userId: $userId,
+            },
+            async: true
+          }).done(function(res) {
+            var result = String(res).trim();
+            if (result == "User Banned Successfully") {
+              $('<div class="alert alert-success"><strong>' + result + '</strong></div>').css({
+                "position": "fixed",
+                "top": 15,
+                "left": 15,
+                "z-index": 10000,
+                "text-align": "center",
+                "font-weight": "bold"
+              }).hide().appendTo("body").fadeIn(1000, function(){
+                $('.alert').fadeOut(1000, function(){
+                  location.reload();
+                });
+              });
+              
+              
+            } else {
+              $('<div class="alert alert-danger"><strong>' + result + '</strong></div>').css({
+                "position": "fixed",
+                "top": 15,
+                "left": 15,
+                "z-index": 10000,
+                "text-align": "center",
+                "font-weight": "bold"
+              }).hide().appendTo("body").fadeIn(1000);
+              $('.alert').fadeOut(1000);
+            }
+          });
+        } else if ($action == "warn") {
+          $.ajax({
+            type: "POST",
+            url: "handlers/admin.php",
+            data: {
+              func: 'warnUser',
+              userId: $userId,
+            },
+            async: true
+          }).done(function(res) {
+            var result = String(res).trim();
+            if (result == "User Warned Successfully") {
+              $('<div class="alert alert-success"><strong>' + result + '</strong></div>').css({
+                "position": "fixed",
+                "top": 15,
+                "left": 15,
+                "z-index": 10000,
+                "text-align": "center",
+                "font-weight": "bold"
+              }).hide().appendTo("body").fadeIn(1000);
+              $('.alert').fadeOut(1000);
+            } else {
+              $('<div class="alert alert-danger"><strong>' + result + '</strong></div>').css({
+                "position": "fixed",
+                "top": 15,
+                "left": 15,
+                "z-index": 10000,
+                "text-align": "center",
+                "font-weight": "bold"
+              }).hide().appendTo("body").fadeIn(1000);
+              $('.alert').fadeOut(1000);
+            }
+          });
+        }
+    });
+      $(document).on('click', '#reportUser', function(e) {
+            if ($('#report-user-textarea').val().length == 0) {
+              $('<div class="alert alert-danger"><strong>Textarea can\'t be empty</strong></div>').css({
+                "position": "fixed",
+                "top": 15,
+                "left": 15,
+                "z-index": 10000,
+                "text-align": "center",
+                "font-weight": "bold"
+              }).hide().appendTo("body").fadeIn(1000);
+              $('.alert').fadeOut(1000);
+            } else {
+              $.ajax({
+                type: "POST",
+                url: "handlers/admin.php",
+                data: {
+                  func: 'reportUser',
+                  userId: $userId,
+                  incidentDescription: $('#report-user-textarea').val()
+                },
+                async: true
+              }).done(function(res) {
+                var result = String(res).trim();
+                if (result == "User Reported Successfully") {
+                  $('<div class="alert alert-success"><strong>' + result + '</strong></div>').css({
+                    "position": "fixed",
+                    "top": 15,
+                    "left": 15,
+                    "z-index": 10000,
+                    "text-align": "center",
+                    "font-weight": "bold"
+                  }).hide().appendTo("body").fadeIn(1000);
+                  $('.alert').fadeOut(1000);
+                  $('#report-user-textarea').val('');
+                  $("#reportUserModal").modal('hide');
+                } else {
+                  $('<div class="alert alert-danger"><strong>' + result + '</strong></div>').css({
+                    "position": "fixed",
+                    "top": 15,
+                    "left": 15,
+                    "z-index": 10000,
+                    "text-align": "center",
+                    "font-weight": "bold"
+                  }).hide().appendTo("body").fadeIn(1000);
+                  $('.alert').fadeOut(1000);
+                }
+              });
+            }
+          });
+
 
             var currentUserPic = <?php echo json_encode($_SESSION['photo']); ?>;
 

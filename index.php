@@ -26,6 +26,9 @@ if (isset($_POST['login'])) {
     $count = mysqli_num_rows($result);
 
     if ($count == 1) {
+        if($row['banned']==1){
+            exit('User Banned');
+        }
         $_SESSION['LoggedIn'] = '1';
         $_SESSION['user'] = $username;
         $_SESSION['user_id'] = $userId;
@@ -140,7 +143,10 @@ if (isset($_POST['login'])) {
                         if (result == "Login Failed.") {
                             $("#FailedLogin").html("<font color='red'>Invalid Username or Password</font>");
                             return false;
-                        } else {
+                        }else if(result == 'User Banned'){
+                            $("#FailedLogin").html("<font color='red'>Sorry, Your account has been banned!</font>");
+                            return false;
+                        }else {
                             document.location.href = "home.php";
                         }
 
