@@ -577,6 +577,10 @@ if (isset($_POST['logout'])) {
           continue;
         }
 
+        if (profile["blocked_by_user"] === "true") {
+          continue;
+        }
+
         if (currentUserPref !== "Both") {
           if (currentUserPref === "Male" && profile["sex"] === "Female") {
             continue;

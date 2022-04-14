@@ -45,6 +45,16 @@
             $row["is_user_blocked"] = "false";
         }
 
+        $sql = "select * from `interactions` where user_id = '$target_id' and target_user = '$user_id' and interaction_type = '2'";  
+        $blocked_by = mysqli_query($con, $sql);  
+        $count = mysqli_num_rows($blocked_by);  
+            
+        if($count == 1){  
+            $row["blocked_by_user"] = "true";
+        } else { 
+            $row["blocked_by_user"] = "false";
+        }
+
         $row["display_name"] = stripcslashes($row["display_name"]);
         $row["bio"] = stripcslashes($row["bio"]);
         $row["interests"] = $interests;
