@@ -55,11 +55,11 @@ if (isset($_POST['logout'])) {
                         <a class="nav-link" href="convos.php">Chats </a>
                     </li>
                     <?php
-                        if($_SESSION['user_type']==1){
+                    if ($_SESSION['user_type'] == 1) {
                         echo '<li class="nav-item active">
                         <a class="nav-link" href="admin.php">Admin</a>
                         </li>';
-                        }
+                    }
                     ?>
                 </ul>
                 <ul class="navbar-nav ml-auto">
@@ -192,6 +192,21 @@ if (isset($_POST['logout'])) {
 
 
     <script>
+        $.holdReady(true);
+
+        // Obtain Interests list
+        var interestsList = [];
+        $.ajax({
+            type: "GET",
+            url: "config/get_interests.php",
+            async: false
+        }).done(function(res) {
+            interestsList = JSON.parse(res);
+
+            $.holdReady(false);
+        });
+
+
         $(document).ready(function() {
             $("#Logout").on('click', function() {
                 $.ajax({
@@ -206,24 +221,15 @@ if (isset($_POST['logout'])) {
                 })
             });
 
-            $.ajax({
-                type: "GET",
-                url: "config/get_interests.php",
-                async: false
-            }).done(function(res) {
-                console.log(res);
-                interestsList = JSON.parse(res);
+            const select = document.getElementById("SelectInterests");
 
-                const select = document.getElementById("SelectInterests");
-
-                for (var i = 0; i < interestsList.length; i++) {
-                    var opt = interestsList[i];
-                    var el = document.createElement("option");
-                    el.textContent = opt["interest_name"];
-                    el.value = opt["interest_id"];
-                    select.appendChild(el);
-                }
-            });
+            for (var i = 0; i < interestsList.length; i++) {
+                var opt = interestsList[i];
+                var el = document.createElement("option");
+                el.textContent = opt["interest_name"];
+                el.value = opt["interest_id"];
+                select.appendChild(el);
+            }
 
             var currentUserPic = <?php echo json_encode($_SESSION['photo']); ?>;
             var currentDisplayName = <?php echo json_encode($_SESSION['display_name']); ?>;
@@ -299,8 +305,8 @@ if (isset($_POST['logout'])) {
             console.log(userInterests);
 
             Array.from(document.querySelector("#SelectInterests").options).forEach(function(option) {
-                for(let i = 0; i < userInterests.length; i++) {
-                    if(option.value === userInterests[i]) {
+                for (let i = 0; i < userInterests.length; i++) {
+                    if (option.value === userInterests[i]) {
                         option.selected = true;
                     }
                 }
@@ -340,11 +346,11 @@ if (isset($_POST['logout'])) {
                     return false;
                 }
 
-                
-                if(chosenInterests.length === 0) {
+
+                if (chosenInterests.length === 0) {
                     alert("Please select your interests");
                     return false;
-                } 
+                }
 
                 $.ajax({
                     type: "POST",

@@ -44,7 +44,7 @@ if (!isset($_SESSION['userReg'])) {
                 <div class="form-row justify-content-around mb-2">
                     <div class="col-5">
                         <label for="InputFullName" class="mb-0">Enter Display Name:</label>
-                        <input type="text" class="form-control text-small" id="InputFullName" aria-describedby="Name" placeholder="Display Name" name="display_name" >
+                        <input type="text" class="form-control text-small" id="InputFullName" aria-describedby="Name" placeholder="Display Name" name="display_name">
                     </div>
                     <div class="col-5">
                         <label for="InputLocation" class="mb-0"></label>Where do you live?</label>
@@ -121,35 +121,40 @@ if (!isset($_SESSION['userReg'])) {
                     <textarea class="form-control" id="InputBio" rows="4" name="bio" maxlength="100"></textarea>
                 </div>
                 <br>
-                <input type="submit" class="btn btn-purple px-3" id="reg" value="Submit"/>
+                <input type="submit" class="btn btn-purple px-3" id="reg" value="Submit" />
             </form>
 
         </div>
     </div>
     <script>
+        $.holdReady(true);
+
+        // Obtain Interests list
+        var interestsList = [];
+        $.ajax({
+            type: "GET",
+            url: "config/get_interests.php",
+            async: false
+        }).done(function(res) {
+            interestsList = JSON.parse(res);
+
+            $.holdReady(false);
+        });
+
+
         $(document).ready(function() {
             console.log('Page Ready');
 
-            // Obtain Interests list
-            var interestsList = [];
 
-            $.ajax({
-                type: "GET",
-                url: "config/get_interests.php",
-                async: false
-            }).done(function(res) {
-                interestsList = JSON.parse(res);
+            const select = document.getElementById("SelectInterests");
 
-                const select = document.getElementById("SelectInterests");
-
-                for (var i = 0; i < interestsList.length; i++) {
-                    var opt = interestsList[i];
-                    var el = document.createElement("option");
-                    el.textContent = opt["interest_name"];
-                    el.value = opt["interest_id"];
-                    select.appendChild(el);
-                }
-            });
+            for (var i = 0; i < interestsList.length; i++) {
+                var opt = interestsList[i];
+                var el = document.createElement("option");
+                el.textContent = opt["interest_name"];
+                el.value = opt["interest_id"];
+                select.appendChild(el);
+            }
 
             // Profile picture upload
             const uploadImage = document.querySelector("#uploadProfileImage");
@@ -200,10 +205,10 @@ if (!isset($_SESSION['userReg'])) {
                     return false;
                 }
 
-                if(chosenInterests.length === 0) {
+                if (chosenInterests.length === 0) {
                     alert("Please select your interests");
                     return false;
-                } 
+                }
 
                 $.ajax({
                     type: "POST",
@@ -211,17 +216,17 @@ if (!isset($_SESSION['userReg'])) {
                     data: new FormData(this),
                     contentType: false,
                     cache: false,
-                    processData:false
+                    processData: false
                 }).done(function(res) {
-                      var result = String(res).trim();
-                      console.log(result);
-                      if(result === "Success!") {
-                        document.location.href="home.php";
-                      } else {
-                        alert("An error has occurred:"+ result);
-                      }
-                      
-                  });
+                    var result = String(res).trim();
+                    console.log(result);
+                    if (result === "Success!") {
+                        document.location.href = "home.php";
+                    } else {
+                        alert("An error has occurred:" + result);
+                    }
+
+                });
 
             });
         });
