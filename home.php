@@ -419,7 +419,7 @@ if (isset($_POST['logout'])) {
 
           //Dropdown Menu
           var dropDownMenu = document.createElement("ul");
-          dropDownMenu.className = "dropdown-menu dropdown";
+          dropDownMenu.className = "dropdown-menu context-dropdown";
           dropDownMenu.id = "dropdown-pending-" + profile['user_id'];
 
           //list items
@@ -731,7 +731,7 @@ if (isset($_POST['logout'])) {
 
           //Dropdown Menu
           var dropDownMenu = document.createElement("ul");
-          dropDownMenu.className = "dropdown-menu dropdown";
+          dropDownMenu.className = "dropdown-menu context-dropdown";
           dropDownMenu.id = "dropdown-pending-" + profile['user_id'];
 
           //list items

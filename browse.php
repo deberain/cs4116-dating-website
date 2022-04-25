@@ -498,7 +498,7 @@ if (isset($_POST['logout'])) {
 
                 //Dropdown Menu
                 var dropDownMenu = document.createElement("ul");
-                dropDownMenu.className = "dropdown-menu dropdown";
+                dropDownMenu.className = "dropdown-menu context-dropdown";
 
 
                 //list items

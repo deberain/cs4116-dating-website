@@ -359,7 +359,7 @@ if (isset($_POST['logout'])) {
                     if (result === "Success!") {
                         document.location.href = "edit.php";
                     } else {
-                        alert("An error ahs occurred");
+                        alert("An error has occurred");
                     }
 
                 });
