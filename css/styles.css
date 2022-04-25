@@ -337,17 +337,13 @@ body, html {
     border-color: #ccc;
   }
   
-  .message-sent img.right {
+  .message-sent img {
     float: right;
     margin-left: 20px;
     margin-right:0;
-  }
-
-  .message-sent img {
-    float: left;
-    max-width: 60px;
-    width: 100%;
-    margin-right: 20px;
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
     border-radius: 50%;
   }
 

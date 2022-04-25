@@ -146,7 +146,7 @@ function checkForUpdates($userId, $lastMatchId, $lastMessageId){
 			$matchContentLastMessageTxt = null;
 			if ($row['sender_id']===$userId){
                 $messageContent = '<div class="message-sent pb-5">
-                        <img src="' . $loggedInUserProfileImage .'" alt="Avatar" class="right">
+                        <img src="' . $loggedInUserProfileImage .'" alt="Avatar">
                         <p style="word-break:normal;">' . $row['message_content'] .'</p>
                         <span class="time-left">' . $row['date'] .'</span>
                     </div>';

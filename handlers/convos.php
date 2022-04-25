@@ -203,7 +203,7 @@ function getChat(){
         while($row = mysqli_fetch_assoc($result)) {
             if ($row['sender_id']==$loggedInUserId){
                 echo '<div class="message-sent pb-5">
-                        <img src="' . $loggedInUserProfileImage .'" alt="Avatar" class="right">
+                        <img src="' . $loggedInUserProfileImage .'" alt="Avatar">
                         <p style="word-break:normal;">' . stripcslashes($row['message_content']) .'</p>
                         <span class="time-left">' . $row['date'] .'</span>
                     </div>';
