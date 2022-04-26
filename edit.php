@@ -171,10 +171,11 @@ if (isset($_POST['logout'])) {
                     </div>
                     <div class="form-row justify-content-around mb-2">
                         <div class="col-10">
-                            <label for="SelectInterests" class="mb-0"></label>Your Interests:</label>
-                            <select class="selectpicker" id="SelectInterests" multiple data-live-search="true" name="interests[]">
+                            <label for="SelectInterests" class="mb-0"></label>Your Interests: </label>
+                            <select class="form-control text-small" id="SelectInterests" multiple data-live-search="true" name="interests[]">
 
                             </select>
+                            <p>Hold down the Ctrl (windows) or Command (Mac) button to select multiple options.</p>
                         </div>
                     </div>
                     <div class="edit-profile-bio">
@@ -322,7 +323,7 @@ if (isset($_POST['logout'])) {
                 var location = $("#InputLocation").val();
                 var bio = $("#InputBio").val();
 
-                var chosenInterests = $('.selectpicker').val();
+                var chosenInterests = $('#SelectInterests').val();
                 console.log(chosenInterests);
 
 

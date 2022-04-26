@@ -109,9 +109,10 @@ if (!isset($_SESSION['userReg'])) {
                 <div class="form-row justify-content-around mb-2">
                     <div class="col-10">
                         <label for="SelectInterests" class="mb-0"></label>Your Interests:</label>
-                        <select class="selectpicker" id="SelectInterests" multiple data-live-search="true" name="interests[]">
+                        <select class="form-control text-small" id="SelectInterests" multiple data-live-search="true" name="interests[]">
 
                         </select>
+                        <p>Hold down the Ctrl (windows) or Command (Mac) button to select multiple options.</p>
                     </div>
                 </div>
 
@@ -134,7 +135,7 @@ if (!isset($_SESSION['userReg'])) {
         $.ajax({
             type: "GET",
             url: "config/get_interests.php",
-            async: false
+            async: true
         }).done(function(res) {
             interestsList = JSON.parse(res);
 
@@ -182,7 +183,7 @@ if (!isset($_SESSION['userReg'])) {
                 var location = $("#InputLocation").val();
                 var bio = $("#InputBio").val();
 
-                var chosenInterests = $('.selectpicker').val();
+                var chosenInterests = $('#SelectInterests').val();
                 console.log(chosenInterests);
 
                 if (displayName === "") {
