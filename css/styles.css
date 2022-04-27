@@ -330,7 +330,7 @@ body, html {
     min-height: 85px;
     max-width: 95%;
     border: 2px solid #dedede;
-    background-color: #ddd;;
+    background-color: #ddd;
     border-radius: 5px;
     padding: 10px;
     margin: 10px;
@@ -356,7 +356,7 @@ body, html {
   }
 
   .white-border .form-control:focus {
-    border: 3px solid rgb(255, 255, 255);;
+    border: 3px solid rgb(255, 255, 255);
     box-shadow: 0 0 0 0.2rem rgb(252,255,255, 0.50);
     background-color: #202731;
     color: #FFF;
