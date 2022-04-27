@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 22, 2022 at 10:04 PM
+-- Generation Time: Apr 27, 2022 at 03:57 PM
 -- Server version: 10.4.22-MariaDB
--- PHP Version: 8.1.1
+-- PHP Version: 8.1.2
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `cupid`
+-- Database: `db_cupid`
 --
 
 -- --------------------------------------------------------
@@ -45,6 +45,14 @@ CREATE TABLE `interaction_types` (
   `interaction_type_id` int(11) NOT NULL,
   `interaction_name` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `interaction_types`
+--
+
+INSERT INTO `interaction_types` (`interaction_type_id`, `interaction_name`) VALUES
+(1, 'like'),
+(2, 'dislike');
 
 -- --------------------------------------------------------
 
@@ -124,6 +132,20 @@ CREATE TABLE `profiles` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `reported_users`
+--
+
+CREATE TABLE `reported_users` (
+  `report_id` int(11) NOT NULL,
+  `reported_user` int(11) NOT NULL,
+  `reporting_user` int(11) NOT NULL,
+  `incident_description` varchar(500) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -137,6 +159,7 @@ CREATE TABLE `users` (
   `email` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `user_interests`
@@ -164,7 +187,7 @@ CREATE TABLE `user_roles` (
 --
 
 INSERT INTO `user_roles` (`role_id`, `role_name`) VALUES
-(1, 'Admin'),
+(1, 'admin'),
 (2, 'normal');
 
 --
@@ -215,6 +238,12 @@ ALTER TABLE `profiles`
   ADD PRIMARY KEY (`user_id`);
 
 --
+-- Indexes for table `reported_users`
+--
+ALTER TABLE `reported_users`
+  ADD PRIMARY KEY (`report_id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -243,13 +272,13 @@ ALTER TABLE `user_roles`
 -- AUTO_INCREMENT for table `interactions`
 --
 ALTER TABLE `interactions`
-  MODIFY `interaction_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `interaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=118;
 
 --
 -- AUTO_INCREMENT for table `interaction_types`
 --
 ALTER TABLE `interaction_types`
-  MODIFY `interaction_type_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `interaction_type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `interests`
@@ -261,25 +290,31 @@ ALTER TABLE `interests`
 -- AUTO_INCREMENT for table `matches`
 --
 ALTER TABLE `matches`
-  MODIFY `match_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `match_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106;
 
 --
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=162;
+
+--
+-- AUTO_INCREMENT for table `reported_users`
+--
+ALTER TABLE `reported_users`
+  MODIFY `report_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `user_interests`
 --
 ALTER TABLE `user_interests`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT for table `user_roles`
