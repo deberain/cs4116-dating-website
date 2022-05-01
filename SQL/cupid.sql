@@ -153,7 +153,7 @@ CREATE TABLE `users` (
   `user_id` int(11) NOT NULL,
   `username` varchar(20) NOT NULL,
   `password` varchar(100) NOT NULL,
-  `date_of_birth` date NOT NULL DEFAULT current_timestamp(),
+  `date_of_birth` timestamp NOT NULL DEFAULT current_timestamp(),
   `user_type` int(8) NOT NULL,
   `banned` int(1) NOT NULL,
   `email` varchar(50) DEFAULT NULL

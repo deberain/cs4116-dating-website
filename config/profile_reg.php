@@ -7,7 +7,7 @@ $user_id = $_SESSION['user_id'];
 $valid_extensions = array('jpeg', 'jpg', 'png', 'gif', 'bmp', 'pdf', 'doc', 'ppt', 'jfif');
 $path = '../images/'; // upload directory
 
-if (!empty($_FILES['image'])) {
+if ($_FILES['image']['size'] != 0) {
     $img = $_FILES["image"]["name"];
     $tmp = $_FILES["image"]["tmp_name"];
 
